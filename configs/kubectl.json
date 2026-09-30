@@ -1,0 +1,3110 @@
+{
+  "name": "kubectl",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "kubectl_get",
+      "description": "Display one or more Kubernetes resources",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "Resource type",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "selector": {
+            "type": "string",
+            "description": "Label selector"
+          },
+          "field_selector": {
+            "type": "string",
+            "description": "Field selector"
+          },
+          "output": {
+            "type": "string",
+            "description": "Output format",
+            "enum": [
+              "json",
+              "yaml",
+              "name",
+              "wide",
+              "jsonpath"
+            ]
+          },
+          "jsonpath": {
+            "type": "string",
+            "description": "JSONPath expression used when output is jsonpath"
+          },
+          "all_namespaces": {
+            "type": "boolean",
+            "description": "List resources across all namespaces"
+          },
+          "show_labels": {
+            "type": "boolean",
+            "description": "Show labels"
+          },
+          "ignore_not_found": {
+            "type": "boolean",
+            "description": "Return successfully when the resource is absent"
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "get",
+        "{{if .all_namespaces}}--all-namespaces{{end}}",
+        "{{with .selector}}--selector={{.}}{{end}}",
+        "{{with .field_selector}}--field-selector={{.}}{{end}}",
+        "{{if eq .output \"jsonpath\"}}--output=jsonpath={{.jsonpath}}{{end}}",
+        "{{if and .output (ne .output \"jsonpath\")}}--output={{.output}}{{end}}",
+        "{{if .show_labels}}--show-labels{{end}}",
+        "{{if .ignore_not_found}}--ignore-not-found{{end}}",
+        "{{.resource}}",
+        "{{with .name}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_describe",
+      "description": "Show detailed information about Kubernetes resources",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "Resource type",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "selector": {
+            "type": "string",
+            "description": "Label selector"
+          },
+          "show_events": {
+            "type": "boolean",
+            "description": "Include related events"
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "describe",
+        "{{with .selector}}--selector={{.}}{{end}}",
+        "{{if .show_events}}--show-events=true{{end}}",
+        "{{.resource}}",
+        "{{with .name}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_explain",
+      "description": "Show documentation for a resource or field",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "Resource or resource field",
+            "minLength": 1
+          },
+          "api_version": {
+            "type": "string",
+            "description": "API version in group/version form"
+          },
+          "recursive": {
+            "type": "boolean",
+            "description": "Print fields recursively"
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "explain",
+        "{{with .api_version}}--api-version={{.}}{{end}}",
+        "{{if .recursive}}--recursive{{end}}",
+        "{{.resource}}"
+      ]
+    },
+    {
+      "name": "kubectl_api_resources",
+      "description": "List API resources supported by the cluster",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "api_group": {
+            "type": "string",
+            "description": "Limit resources to an API group"
+          },
+          "namespaced": {
+            "type": "string",
+            "description": "Filter by namespaced scope",
+            "enum": [
+              "true",
+              "false"
+            ]
+          },
+          "verbs": {
+            "type": "string",
+            "description": "Comma-separated API verbs"
+          },
+          "output": {
+            "type": "string",
+            "description": "Output format",
+            "enum": [
+              "wide",
+              "name"
+            ]
+          },
+          "no_headers": {
+            "type": "boolean",
+            "description": "Hide column headers"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "api-resources",
+        "{{with .api_group}}--api-group={{.}}{{end}}",
+        "{{with .namespaced}}--namespaced={{.}}{{end}}",
+        "{{with .verbs}}--verbs={{.}}{{end}}",
+        "{{with .output}}--output={{.}}{{end}}",
+        "{{if .no_headers}}--no-headers{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_api_versions",
+      "description": "List API versions supported by the cluster",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "api-versions"
+      ]
+    },
+    {
+      "name": "kubectl_cluster_info",
+      "description": "Display cluster control-plane and service information",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "dump": {
+            "type": "boolean",
+            "description": "Dump cluster state for debugging"
+          },
+          "output_directory": {
+            "type": "string",
+            "description": "Directory used by a cluster-info dump"
+          },
+          "all_namespaces": {
+            "type": "boolean",
+            "description": "Include all namespaces in a dump"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "cluster-info",
+        "{{if .dump}}dump{{end}}",
+        "{{with .output_directory}}--output-directory={{.}}{{end}}",
+        "{{if .all_namespaces}}--all-namespaces{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_events",
+      "description": "List Kubernetes events",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "for_resource": {
+            "type": "string",
+            "description": "Resource selector in TYPE/NAME form"
+          },
+        "types": {
+          "type": "string",
+          "description": "Event type",
+            "enum": [
+              "Normal",
+              "Warning"
+            ]
+        },
+        "all_namespaces": {
+          "type": "boolean",
+          "description": "List events across all namespaces"
+        },
+          "no_headers": {
+            "type": "boolean",
+            "description": "Hide column headers"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "events",
+        "{{with .for_resource}}--for={{.}}{{end}}",
+        "{{with .types}}--types={{.}}{{end}}",
+        "{{if .all_namespaces}}--all-namespaces{{end}}",
+        "{{if .no_headers}}--no-headers{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_logs",
+      "description": "Print logs from a pod or workload",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "Pod name or TYPE/NAME",
+            "minLength": 1
+          },
+          "container": {
+            "type": "string",
+            "description": "Container name"
+          },
+          "all_containers": {
+            "type": "boolean",
+            "description": "Include all containers"
+          },
+          "previous": {
+            "type": "boolean",
+            "description": "Show logs for the previous container instance"
+          },
+          "since": {
+            "type": "string",
+            "description": "Show logs newer than this duration"
+          },
+          "since_time": {
+            "type": "string",
+            "description": "Show logs newer than this RFC3339 timestamp"
+          },
+          "tail": {
+            "type": "integer",
+            "description": "Number of recent lines",
+            "minimum": 0
+          },
+          "timestamps": {
+            "type": "boolean",
+            "description": "Show timestamps"
+          },
+          "prefix": {
+            "type": "boolean",
+            "description": "Prefix lines with pod and container names"
+          },
+          "limit_bytes": {
+            "type": "integer",
+            "description": "Maximum number of log bytes",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "logs",
+        "{{with .container}}--container={{.}}{{end}}",
+        "{{if .all_containers}}--all-containers{{end}}",
+        "{{if .previous}}--previous{{end}}",
+        "{{with .since}}--since={{.}}{{end}}",
+        "{{with .since_time}}--since-time={{.}}{{end}}",
+        "{{with .tail}}--tail={{.}}{{end}}",
+        "{{if .timestamps}}--timestamps{{end}}",
+        "{{if .prefix}}--prefix{{end}}",
+        "{{with .limit_bytes}}--limit-bytes={{.}}{{end}}",
+        "{{.resource}}"
+      ]
+    },
+    {
+      "name": "kubectl_top_pod",
+      "description": "Show pod CPU and memory usage",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "pod": {
+            "type": "string",
+            "description": "Pod name"
+          },
+          "selector": {
+            "type": "string",
+            "description": "Label selector"
+          },
+          "all_namespaces": {
+            "type": "boolean",
+            "description": "Show pods across all namespaces"
+          },
+          "containers": {
+            "type": "boolean",
+            "description": "Show individual container metrics"
+          },
+          "sort_by": {
+            "type": "string",
+            "description": "Metric used for sorting",
+            "enum": [
+              "cpu",
+              "memory"
+            ]
+          },
+          "no_headers": {
+            "type": "boolean",
+            "description": "Hide column headers"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "top",
+        "pod",
+        "{{if .all_namespaces}}--all-namespaces{{end}}",
+        "{{with .selector}}--selector={{.}}{{end}}",
+        "{{if .containers}}--containers{{end}}",
+        "{{with .sort_by}}--sort-by={{.}}{{end}}",
+        "{{if .no_headers}}--no-headers{{end}}",
+        "{{with .pod}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_top_node",
+      "description": "Show node CPU and memory usage",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "node": {
+            "type": "string",
+            "description": "Node name"
+          },
+          "selector": {
+            "type": "string",
+            "description": "Label selector"
+          },
+          "sort_by": {
+            "type": "string",
+            "description": "Metric used for sorting",
+            "enum": [
+              "cpu",
+              "memory"
+            ]
+          },
+          "show_capacity": {
+            "type": "boolean",
+            "description": "Show capacity instead of allocatable resources"
+          },
+          "no_headers": {
+            "type": "boolean",
+            "description": "Hide column headers"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "top",
+        "node",
+        "{{with .selector}}--selector={{.}}{{end}}",
+        "{{with .sort_by}}--sort-by={{.}}{{end}}",
+        "{{if .show_capacity}}--show-capacity{{end}}",
+        "{{if .no_headers}}--no-headers{{end}}",
+        "{{with .node}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_auth_can_i",
+      "description": "Check whether an API action is allowed",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "verb": {
+            "type": "string",
+            "description": "Kubernetes API verb"
+          },
+          "resource": {
+            "type": "string",
+            "description": "Resource, TYPE/NAME, or non-resource URL"
+          },
+          "subresource": {
+            "type": "string",
+            "description": "Subresource"
+          },
+          "all_namespaces": {
+            "type": "boolean",
+            "description": "Check across all namespaces"
+          },
+          "list": {
+            "type": "boolean",
+            "description": "List all allowed actions"
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Suppress output and use only the exit status"
+          },
+          "as": {
+            "type": "string",
+            "description": "User or service account to impersonate"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "auth",
+        "can-i",
+        "{{if .all_namespaces}}--all-namespaces{{end}}",
+        "{{if .list}}--list{{end}}",
+        "{{if .quiet}}--quiet{{end}}",
+        "{{with .subresource}}--subresource={{.}}{{end}}",
+        "{{with .as}}--as={{.}}{{end}}",
+        "{{with .verb}}{{.}}{{end}}",
+        "{{with .resource}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_apply",
+      "description": "Apply resources from a manifest or kustomization directory",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "filename": {
+            "type": "string",
+            "description": "Manifest file, directory, or URL"
+          },
+          "kustomize": {
+            "type": "string",
+            "description": "Kustomization directory or URL"
+          },
+          "server_side": {
+            "type": "boolean",
+            "description": "Use server-side apply"
+          },
+          "force_conflicts": {
+            "type": "boolean",
+            "description": "Overwrite conflicting fields in server-side apply"
+          },
+          "field_manager": {
+            "type": "string",
+            "description": "Field manager name"
+          },
+          "prune": {
+            "type": "boolean",
+            "description": "Remove resources no longer present"
+          },
+          "dry_run": {
+            "type": "string",
+            "description": "Dry-run strategy",
+            "enum": [
+              "client",
+              "server"
+            ]
+          },
+          "output": {
+            "type": "string",
+            "description": "Output format",
+            "enum": [
+              "json",
+              "yaml",
+              "name"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "apply",
+        "{{with .filename}}--filename={{.}}{{end}}",
+        "{{with .kustomize}}--kustomize={{.}}{{end}}",
+        "{{if .server_side}}--server-side{{end}}",
+        "{{if .force_conflicts}}--force-conflicts{{end}}",
+        "{{with .field_manager}}--field-manager={{.}}{{end}}",
+        "{{if .prune}}--prune{{end}}",
+        "{{with .dry_run}}--dry-run={{.}}{{end}}",
+        "{{with .output}}--output={{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_diff",
+      "description": "Diff live resources against manifests",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "filename": {
+            "type": "string",
+            "description": "Manifest file, directory, or URL"
+          },
+          "kustomize": {
+            "type": "string",
+            "description": "Kustomization directory or URL"
+          },
+          "server_side": {
+            "type": "boolean",
+            "description": "Use server-side apply semantics"
+          },
+          "field_manager": {
+            "type": "string",
+            "description": "Field manager name"
+          },
+          "force_conflicts": {
+            "type": "boolean",
+            "description": "Overwrite conflicting fields in server-side mode"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "diff",
+        "{{with .filename}}--filename={{.}}{{end}}",
+        "{{with .kustomize}}--kustomize={{.}}{{end}}",
+        "{{if .server_side}}--server-side{{end}}",
+        "{{with .field_manager}}--field-manager={{.}}{{end}}",
+        "{{if .force_conflicts}}--force-conflicts{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_create",
+      "description": "Create resources from a manifest",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "filename": {
+            "type": "string",
+            "description": "Manifest file, directory, or URL",
+            "minLength": 1
+          },
+          "recursive": {
+            "type": "boolean",
+            "description": "Process directories recursively"
+          },
+          "save_config": {
+            "type": "boolean",
+            "description": "Save the configuration annotation"
+          },
+          "dry_run": {
+            "type": "string",
+            "description": "Dry-run strategy",
+            "enum": [
+              "client",
+              "server"
+            ]
+          },
+          "output": {
+            "type": "string",
+            "description": "Output format",
+            "enum": [
+              "json",
+              "yaml",
+              "name"
+            ]
+          }
+        },
+        "required": [
+          "filename"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "create",
+        "--filename={{.filename}}",
+        "{{if .recursive}}--recursive{{end}}",
+        "{{if .save_config}}--save-config{{end}}",
+        "{{with .dry_run}}--dry-run={{.}}{{end}}",
+        "{{with .output}}--output={{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_create_namespace",
+      "description": "Create a namespace",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "name": {
+            "type": "string",
+            "description": "Namespace name",
+            "minLength": 1
+          },
+          "dry_run": {
+            "type": "string",
+            "description": "Dry-run strategy",
+            "enum": [
+              "client",
+              "server"
+            ]
+          },
+          "output": {
+            "type": "string",
+            "description": "Output format",
+            "enum": [
+              "json",
+              "yaml",
+              "name"
+            ]
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "create",
+        "namespace",
+        "{{.name}}",
+        "{{with .dry_run}}--dry-run={{.}}{{end}}",
+        "{{with .output}}--output={{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_create_deployment",
+      "description": "Create a deployment from an image",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "name": {
+            "type": "string",
+            "description": "Deployment name",
+            "minLength": 1
+          },
+          "image": {
+            "type": "string",
+            "description": "Container image",
+            "minLength": 1
+          },
+          "replicas": {
+            "type": "integer",
+            "description": "Desired replica count",
+            "minimum": 0
+          },
+          "port": {
+            "type": "integer",
+            "description": "Container port",
+            "minimum": 1,
+            "maximum": 65535
+          },
+          "dry_run": {
+            "type": "string",
+            "description": "Dry-run strategy",
+            "enum": [
+              "client",
+              "server"
+            ]
+          },
+          "output": {
+            "type": "string",
+            "description": "Output format",
+            "enum": [
+              "json",
+              "yaml",
+              "name"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "image"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "create",
+        "deployment",
+        "{{.name}}",
+        "--image={{.image}}",
+        "{{with .replicas}}--replicas={{.}}{{end}}",
+        "{{with .port}}--port={{.}}{{end}}",
+        "{{with .dry_run}}--dry-run={{.}}{{end}}",
+        "{{with .output}}--output={{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_create_configmap",
+      "description": "Create a ConfigMap",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "name": {
+            "type": "string",
+            "description": "ConfigMap name",
+            "minLength": 1
+          },
+          "from_literal": {
+            "type": "string",
+            "description": "One key=value literal"
+          },
+          "from_file": {
+            "type": "string",
+            "description": "One file or directory"
+          },
+          "from_env_file": {
+            "type": "string",
+            "description": "Environment file"
+          },
+          "append_hash": {
+            "type": "boolean",
+            "description": "Append a hash of the data to the name"
+          },
+          "dry_run": {
+            "type": "string",
+            "description": "Dry-run strategy",
+            "enum": [
+              "client",
+              "server"
+            ]
+          },
+          "output": {
+            "type": "string",
+            "description": "Output format",
+            "enum": [
+              "json",
+              "yaml",
+              "name"
+            ]
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "create",
+        "configmap",
+        "{{.name}}",
+        "{{with .from_literal}}--from-literal={{.}}{{end}}",
+        "{{with .from_file}}--from-file={{.}}{{end}}",
+        "{{with .from_env_file}}--from-env-file={{.}}{{end}}",
+        "{{if .append_hash}}--append-hash{{end}}",
+        "{{with .dry_run}}--dry-run={{.}}{{end}}",
+        "{{with .output}}--output={{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_create_serviceaccount",
+      "description": "Create a service account",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "name": {
+            "type": "string",
+            "description": "Service account name",
+            "minLength": 1
+          },
+          "dry_run": {
+            "type": "string",
+            "description": "Dry-run strategy",
+            "enum": [
+              "client",
+              "server"
+            ]
+          },
+          "output": {
+            "type": "string",
+            "description": "Output format",
+            "enum": [
+              "json",
+              "yaml",
+              "name"
+            ]
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "create",
+        "serviceaccount",
+        "{{.name}}",
+        "{{with .dry_run}}--dry-run={{.}}{{end}}",
+        "{{with .output}}--output={{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_replace",
+      "description": "Replace resources from a manifest",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "filename": {
+            "type": "string",
+            "description": "Manifest file, directory, or URL",
+            "minLength": 1
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Delete and recreate the resource"
+          },
+          "cascade": {
+            "type": "string",
+            "description": "Deletion cascading strategy",
+            "enum": [
+              "background",
+              "orphan",
+              "foreground"
+            ]
+          },
+          "grace_period": {
+            "type": "integer",
+            "description": "Deletion grace period in seconds",
+            "minimum": 0
+          },
+          "save_config": {
+            "type": "boolean",
+            "description": "Save the configuration annotation"
+          }
+        },
+        "required": [
+          "filename"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "replace",
+        "--filename={{.filename}}",
+        "{{if .force}}--force{{end}}",
+        "{{with .cascade}}--cascade={{.}}{{end}}",
+        "{{with .grace_period}}--grace-period={{.}}{{end}}",
+        "{{if .save_config}}--save-config{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_delete",
+      "description": "Delete Kubernetes resources",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "Resource type",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "selector": {
+            "type": "string",
+            "description": "Label selector"
+          },
+          "all": {
+            "type": "boolean",
+            "description": "Delete all resources of the selected type"
+          },
+          "cascade": {
+            "type": "string",
+            "description": "Deletion cascading strategy",
+            "enum": [
+              "background",
+              "orphan",
+              "foreground"
+            ]
+          },
+          "grace_period": {
+            "type": "integer",
+            "description": "Grace period in seconds",
+            "minimum": 0
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Immediately remove the resource"
+          },
+          "wait": {
+            "type": "boolean",
+            "description": "Wait for resources to disappear"
+          },
+          "ignore_not_found": {
+            "type": "boolean",
+            "description": "Return successfully when resources are absent"
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "delete",
+        "{{with .selector}}--selector={{.}}{{end}}",
+        "{{if .all}}--all{{end}}",
+        "{{with .cascade}}--cascade={{.}}{{end}}",
+        "{{with .grace_period}}--grace-period={{.}}{{end}}",
+        "{{if .force}}--force{{end}}",
+        "{{if .wait}}--wait=true{{else}}--wait=false{{end}}",
+        "{{if .ignore_not_found}}--ignore-not-found{{end}}",
+        "{{.resource}}",
+        "{{with .name}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_patch",
+      "description": "Update resource fields using a patch",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "Resource type",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Resource name",
+            "minLength": 1
+          },
+          "patch": {
+            "type": "string",
+            "description": "Patch document",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "description": "Patch strategy",
+            "enum": [
+              "json",
+              "merge",
+              "strategic"
+            ]
+          },
+          "subresource": {
+            "type": "string",
+            "description": "Subresource to patch"
+          },
+          "dry_run": {
+            "type": "string",
+            "description": "Dry-run strategy",
+            "enum": [
+              "client",
+              "server"
+            ]
+          }
+        },
+        "required": [
+          "resource",
+          "name",
+          "patch"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "patch",
+        "{{with .type}}--type={{.}}{{end}}",
+        "--patch={{.patch}}",
+        "{{with .subresource}}--subresource={{.}}{{end}}",
+        "{{with .dry_run}}--dry-run={{.}}{{end}}",
+        "{{.resource}}",
+        "{{.name}}"
+      ]
+    },
+    {
+      "name": "kubectl_label",
+      "description": "Add, update, or remove a resource label",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "Resource type",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Resource name",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "description": "Label in key=value form, or key- to remove it",
+            "minLength": 1
+          },
+          "overwrite": {
+            "type": "boolean",
+            "description": "Overwrite an existing label"
+          },
+          "resource_version": {
+            "type": "string",
+            "description": "Require a specific resource version"
+          }
+        },
+        "required": [
+          "resource",
+          "name",
+          "label"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "label",
+        "{{if .overwrite}}--overwrite{{end}}",
+        "{{with .resource_version}}--resource-version={{.}}{{end}}",
+        "{{.resource}}",
+        "{{.name}}",
+        "{{.label}}"
+      ]
+    },
+    {
+      "name": "kubectl_annotate",
+      "description": "Add, update, or remove a resource annotation",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "Resource type",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Resource name",
+            "minLength": 1
+          },
+          "annotation": {
+            "type": "string",
+            "description": "Annotation in key=value form, or key- to remove it",
+            "minLength": 1
+          },
+          "overwrite": {
+            "type": "boolean",
+            "description": "Overwrite an existing annotation"
+          },
+          "resource_version": {
+            "type": "string",
+            "description": "Require a specific resource version"
+          }
+        },
+        "required": [
+          "resource",
+          "name",
+          "annotation"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "annotate",
+        "{{if .overwrite}}--overwrite{{end}}",
+        "{{with .resource_version}}--resource-version={{.}}{{end}}",
+        "{{.resource}}",
+        "{{.name}}",
+        "{{.annotation}}"
+      ]
+    },
+    {
+      "name": "kubectl_run",
+      "description": "Create and run a pod from an image",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "name": {
+            "type": "string",
+            "description": "Pod name",
+            "minLength": 1
+          },
+          "image": {
+            "type": "string",
+            "description": "Container image",
+            "minLength": 1
+          },
+          "restart": {
+            "type": "string",
+            "description": "Restart policy",
+            "enum": [
+              "Always",
+              "OnFailure",
+              "Never"
+            ]
+          },
+          "environment": {
+            "type": "string",
+            "description": "One environment variable in NAME=VALUE form"
+          },
+          "port": {
+            "type": "integer",
+            "description": "Container port",
+            "minimum": 1,
+            "maximum": 65535
+          },
+          "service_account": {
+            "type": "string",
+            "description": "Service account name"
+          },
+          "executable": {
+            "type": "string",
+            "description": "Container command executable"
+          },
+          "option": {
+            "type": "string",
+            "description": "One option passed to the executable"
+          },
+          "operand": {
+            "type": "string",
+            "description": "One operand passed to the executable"
+          },
+          "dry_run": {
+            "type": "string",
+            "description": "Dry-run strategy",
+            "enum": [
+              "client",
+              "server"
+            ]
+          },
+          "output": {
+            "type": "string",
+            "description": "Output format",
+            "enum": [
+              "json",
+              "yaml",
+              "name"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "image"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "run",
+        "{{.name}}",
+        "--image={{.image}}",
+        "{{with .restart}}--restart={{.}}{{end}}",
+        "{{with .environment}}--env={{.}}{{end}}",
+        "{{with .port}}--port={{.}}{{end}}",
+        "{{with .service_account}}--serviceaccount={{.}}{{end}}",
+        "{{with .dry_run}}--dry-run={{.}}{{end}}",
+        "{{with .output}}--output={{.}}{{end}}",
+        "{{with .executable}}--command{{end}}",
+        "{{with .executable}}--{{end}}",
+        "{{with .executable}}{{.}}{{end}}",
+        "{{with .option}}{{.}}{{end}}",
+        "{{with .operand}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_expose",
+      "description": "Expose a workload as a Kubernetes Service",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "TYPE/NAME to expose",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Service name"
+          },
+          "port": {
+            "type": "integer",
+            "description": "Service port",
+            "minimum": 1,
+            "maximum": 65535
+          },
+          "target_port": {
+            "type": "string",
+            "description": "Target port name or number"
+          },
+          "protocol": {
+            "type": "string",
+            "description": "Network protocol",
+            "enum": [
+              "TCP",
+              "UDP",
+              "SCTP"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "Service type",
+            "enum": [
+              "ClusterIP",
+              "NodePort",
+              "LoadBalancer",
+              "ExternalName"
+            ]
+          },
+          "cluster_ip": {
+            "type": "string",
+            "description": "Cluster IP address"
+          },
+          "external_ip": {
+            "type": "string",
+            "description": "One external IP address"
+          },
+          "load_balancer_ip": {
+            "type": "string",
+            "description": "Load balancer IP address"
+          }
+        },
+        "required": [
+          "resource",
+          "port"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "expose",
+        "{{with .name}}--name={{.}}{{end}}",
+        "--port={{.port}}",
+        "{{with .target_port}}--target-port={{.}}{{end}}",
+        "{{with .protocol}}--protocol={{.}}{{end}}",
+        "{{with .type}}--type={{.}}{{end}}",
+        "{{with .cluster_ip}}--cluster-ip={{.}}{{end}}",
+        "{{with .external_ip}}--external-ip={{.}}{{end}}",
+        "{{with .load_balancer_ip}}--load-balancer-ip={{.}}{{end}}",
+        "{{.resource}}"
+      ]
+    },
+    {
+      "name": "kubectl_set_image",
+      "description": "Update a workload container image",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "TYPE/NAME of the workload",
+            "minLength": 1
+          },
+          "container": {
+            "type": "string",
+            "description": "Container name",
+            "minLength": 1
+          },
+          "image": {
+            "type": "string",
+            "description": "New image reference",
+            "minLength": 1
+          },
+          "record": {
+            "type": "boolean",
+            "description": "Record the command in the resource annotation"
+          },
+          "local": {
+            "type": "boolean",
+            "description": "Update locally without contacting the server"
+          },
+          "dry_run": {
+            "type": "string",
+            "description": "Dry-run strategy",
+            "enum": [
+              "client",
+              "server"
+            ]
+          }
+        },
+        "required": [
+          "resource",
+          "container",
+          "image"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "set",
+        "image",
+        "{{if .record}}--record{{end}}",
+        "{{if .local}}--local{{end}}",
+        "{{with .dry_run}}--dry-run={{.}}{{end}}",
+        "{{.resource}}",
+        "{{.container}}={{.image}}"
+      ]
+    },
+    {
+      "name": "kubectl_set_env",
+      "description": "Update environment variables on a workload",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "TYPE/NAME of the workload",
+            "minLength": 1
+          },
+          "environment": {
+            "type": "string",
+            "description": "Environment assignment in NAME=VALUE form, or NAME- to remove it",
+            "minLength": 1
+          },
+          "container": {
+            "type": "string",
+            "description": "Container name or wildcard"
+          },
+          "overwrite": {
+            "type": "boolean",
+            "description": "Overwrite existing environment variables"
+          },
+          "local": {
+            "type": "boolean",
+            "description": "Update locally without contacting the server"
+          },
+          "dry_run": {
+            "type": "string",
+            "description": "Dry-run strategy",
+            "enum": [
+              "client",
+              "server"
+            ]
+          }
+        },
+        "required": [
+          "resource",
+          "environment"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "set",
+        "env",
+        "{{with .container}}--containers={{.}}{{end}}",
+        "{{if .overwrite}}--overwrite{{end}}",
+        "{{if .local}}--local{{end}}",
+        "{{with .dry_run}}--dry-run={{.}}{{end}}",
+        "{{.resource}}",
+        "{{.environment}}"
+      ]
+    },
+    {
+      "name": "kubectl_rollout_status",
+      "description": "Watch the status of a workload rollout until completion",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "TYPE/NAME of the workload",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "integer",
+            "description": "Specific rollout revision",
+            "minimum": 0
+          },
+          "timeout": {
+            "type": "string",
+            "description": "Maximum time to wait"
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "rollout",
+        "status",
+        "{{with .revision}}--revision={{.}}{{end}}",
+        "{{with .timeout}}--timeout={{.}}{{end}}",
+        "{{.resource}}"
+      ]
+    },
+    {
+      "name": "kubectl_rollout_history",
+      "description": "Show rollout history for a workload",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "TYPE/NAME of the workload",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "integer",
+            "description": "Specific rollout revision",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "rollout",
+        "history",
+        "{{with .revision}}--revision={{.}}{{end}}",
+        "{{.resource}}"
+      ]
+    },
+    {
+      "name": "kubectl_rollout_restart",
+      "description": "Restart a workload",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "TYPE/NAME of the workload",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "rollout",
+        "restart",
+        "{{.resource}}"
+      ]
+    },
+    {
+      "name": "kubectl_rollout_undo",
+      "description": "Roll back a workload rollout",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "TYPE/NAME of the workload",
+            "minLength": 1
+          },
+          "to_revision": {
+            "type": "integer",
+            "description": "Revision to restore",
+            "minimum": 0
+          },
+          "dry_run": {
+            "type": "string",
+            "description": "Dry-run strategy",
+            "enum": [
+              "client",
+              "server"
+            ]
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "rollout",
+        "undo",
+        "{{with .to_revision}}--to-revision={{.}}{{end}}",
+        "{{with .dry_run}}--dry-run={{.}}{{end}}",
+        "{{.resource}}"
+      ]
+    },
+    {
+      "name": "kubectl_rollout_pause",
+      "description": "Pause a workload rollout",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "TYPE/NAME of the workload",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "rollout",
+        "pause",
+        "{{.resource}}"
+      ]
+    },
+    {
+      "name": "kubectl_rollout_resume",
+      "description": "Resume a paused workload rollout",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "TYPE/NAME of the workload",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "rollout",
+        "resume",
+        "{{.resource}}"
+      ]
+    },
+    {
+      "name": "kubectl_scale",
+      "description": "Set the replica count for a workload",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "TYPE/NAME of the workload",
+            "minLength": 1
+          },
+          "replicas": {
+            "type": "integer",
+            "description": "Desired replica count",
+            "minimum": 0
+          },
+          "current_replicas": {
+            "type": "integer",
+            "description": "Require the current replica count",
+            "minimum": 0
+          },
+          "resource_version": {
+            "type": "string",
+            "description": "Require a specific resource version"
+          },
+          "timeout": {
+            "type": "string",
+            "description": "Maximum time to wait"
+          }
+        },
+        "required": [
+          "resource",
+          "replicas"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "scale",
+        "--replicas={{.replicas}}",
+        "{{with .current_replicas}}--current-replicas={{.}}{{end}}",
+        "{{with .resource_version}}--resource-version={{.}}{{end}}",
+        "{{with .timeout}}--timeout={{.}}{{end}}",
+        "{{.resource}}"
+      ]
+    },
+    {
+      "name": "kubectl_autoscale",
+      "description": "Create a HorizontalPodAutoscaler for a workload",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "TYPE/NAME of the workload",
+            "minLength": 1
+          },
+          "min": {
+            "type": "integer",
+            "description": "Minimum replica count",
+            "minimum": 1
+          },
+          "max": {
+            "type": "integer",
+            "description": "Maximum replica count",
+            "minimum": 1
+          },
+          "cpu_percent": {
+            "type": "integer",
+            "description": "Target average CPU utilization",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "name": {
+            "type": "string",
+            "description": "Autoscaler name"
+          }
+        },
+        "required": [
+          "resource",
+          "max"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "autoscale",
+        "{{with .min}}--min={{.}}{{end}}",
+        "--max={{.max}}",
+        "{{with .cpu_percent}}--cpu-percent={{.}}{{end}}",
+        "{{with .name}}--name={{.}}{{end}}",
+        "{{.resource}}"
+      ]
+    },
+    {
+      "name": "kubectl_exec",
+      "description": "Execute a command in a running container",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "Pod name or TYPE/NAME",
+            "minLength": 1
+          },
+          "container": {
+            "type": "string",
+            "description": "Container name"
+          },
+          "executable": {
+            "type": "string",
+            "description": "Executable inside the container",
+            "minLength": 1
+          },
+          "option": {
+            "type": "string",
+            "description": "One option passed to the executable"
+          },
+          "operand": {
+            "type": "string",
+            "description": "One operand passed to the executable"
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Print only command output"
+          },
+          "pod_running_timeout": {
+            "type": "string",
+            "description": "Maximum time to wait for a running pod"
+          }
+        },
+        "required": [
+          "resource",
+          "executable"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "exec",
+        "{{with .container}}--container={{.}}{{end}}",
+        "{{if .quiet}}--quiet{{end}}",
+        "{{with .pod_running_timeout}}--pod-running-timeout={{.}}{{end}}",
+        "{{.resource}}",
+        "--",
+        "{{.executable}}",
+        "{{with .option}}{{.}}{{end}}",
+        "{{with .operand}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_cp",
+      "description": "Copy files between the local filesystem and a container",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "source": {
+            "type": "string",
+            "description": "Source in local path or namespace/pod:path form",
+            "minLength": 1
+          },
+          "destination": {
+            "type": "string",
+            "description": "Destination in local path or namespace/pod:path form",
+            "minLength": 1
+          },
+          "container": {
+            "type": "string",
+            "description": "Container name"
+          },
+          "no_preserve": {
+            "type": "boolean",
+            "description": "Do not preserve ownership and permissions"
+          },
+          "retries": {
+            "type": "integer",
+            "description": "Number of copy retries",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "source",
+          "destination"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "cp",
+        "{{with .container}}--container={{.}}{{end}}",
+        "{{if .no_preserve}}--no-preserve{{end}}",
+        "{{with .retries}}--retries={{.}}{{end}}",
+        "{{.source}}",
+        "{{.destination}}"
+      ]
+    },
+    {
+      "name": "kubectl_wait",
+      "description": "Wait for a resource condition",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "resource": {
+            "type": "string",
+            "description": "TYPE/NAME or resource selector",
+            "minLength": 1
+          },
+          "condition": {
+            "type": "string",
+            "description": "Condition expression, for example condition=Available"
+          },
+          "for_delete": {
+            "type": "boolean",
+            "description": "Wait for the resource to be deleted"
+          },
+          "timeout": {
+            "type": "string",
+            "description": "Maximum time to wait"
+          },
+          "selector": {
+            "type": "string",
+            "description": "Label selector"
+          },
+          "all": {
+            "type": "boolean",
+            "description": "Select all resources of the given type"
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "wait",
+        "{{if .for_delete}}--for=delete{{end}}",
+        "{{with .condition}}--for={{.}}{{end}}",
+        "{{with .timeout}}--timeout={{.}}{{end}}",
+        "{{with .selector}}--selector={{.}}{{end}}",
+        "{{if .all}}--all{{end}}",
+        "{{.resource}}"
+      ]
+    },
+    {
+      "name": "kubectl_cordon",
+      "description": "Mark a node as unschedulable",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "node": {
+            "type": "string",
+            "description": "Node name",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "node"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "cordon",
+        "{{.node}}"
+      ]
+    },
+    {
+      "name": "kubectl_uncordon",
+      "description": "Mark a node as schedulable",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "node": {
+            "type": "string",
+            "description": "Node name",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "node"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "uncordon",
+        "{{.node}}"
+      ]
+    },
+    {
+      "name": "kubectl_drain",
+      "description": "Drain a node in preparation for maintenance",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "node": {
+            "type": "string",
+            "description": "Node name",
+            "minLength": 1
+          },
+          "ignore_daemonsets": {
+            "type": "boolean",
+            "description": "Ignore DaemonSet-managed pods"
+          },
+          "delete_emptydir_data": {
+            "type": "boolean",
+            "description": "Delete pods using emptyDir volumes"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Continue when unmanaged pods exist"
+          },
+          "disable_eviction": {
+            "type": "boolean",
+            "description": "Use delete instead of the eviction API"
+          },
+          "grace_period": {
+            "type": "integer",
+            "description": "Pod termination grace period in seconds",
+            "minimum": 0
+          },
+          "timeout": {
+            "type": "string",
+            "description": "Maximum time to wait"
+          },
+          "dry_run": {
+            "type": "string",
+            "description": "Dry-run strategy",
+            "enum": [
+              "client",
+              "server"
+            ]
+          }
+        },
+        "required": [
+          "node"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "drain",
+        "{{if .ignore_daemonsets}}--ignore-daemonsets{{end}}",
+        "{{if .delete_emptydir_data}}--delete-emptydir-data{{end}}",
+        "{{if .force}}--force{{end}}",
+        "{{if .disable_eviction}}--disable-eviction{{end}}",
+        "{{with .grace_period}}--grace-period={{.}}{{end}}",
+        "{{with .timeout}}--timeout={{.}}{{end}}",
+        "{{with .dry_run}}--dry-run={{.}}{{end}}",
+        "{{.node}}"
+      ]
+    },
+    {
+      "name": "kubectl_taint",
+      "description": "Add, update, or remove a node taint",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "node": {
+            "type": "string",
+            "description": "Node name",
+            "minLength": 1
+          },
+          "taint": {
+            "type": "string",
+            "description": "Taint in key=value:effect form, or key:effect- to remove it",
+            "minLength": 1
+          },
+          "overwrite": {
+            "type": "boolean",
+            "description": "Overwrite an existing taint"
+          }
+        },
+        "required": [
+          "node",
+          "taint"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "taint",
+        "{{if .overwrite}}--overwrite{{end}}",
+        "node",
+        "{{.node}}",
+        "{{.taint}}"
+      ]
+    },
+    {
+      "name": "kubectl_kustomize",
+      "description": "Build a kustomization target",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "target": {
+            "type": "string",
+            "description": "Directory or URL containing kustomization.yaml",
+            "minLength": 1
+          },
+          "enable_helm": {
+            "type": "boolean",
+            "description": "Enable Helm chart inflation"
+          },
+          "load_restrictor": {
+            "type": "string",
+            "description": "File-loading restriction",
+            "enum": [
+              "LoadRestrictionsNone",
+              "RootOnly"
+            ]
+          },
+          "output": {
+            "type": "string",
+            "description": "Directory in which to write generated files"
+          }
+        },
+        "required": [
+          "target"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "kustomize",
+        "{{if .enable_helm}}--enable-helm{{end}}",
+        "{{with .load_restrictor}}--load-restrictor={{.}}{{end}}",
+        "{{with .output}}--output={{.}}{{end}}",
+        "{{.target}}"
+      ]
+    },
+    {
+      "name": "kubectl_config_current_context",
+      "description": "Display the current kubeconfig context",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "config",
+        "current-context"
+      ]
+    },
+    {
+      "name": "kubectl_config_get_contexts",
+      "description": "List kubeconfig contexts",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "name": {
+            "type": "string",
+            "description": "Specific context name"
+          },
+          "no_headers": {
+            "type": "boolean",
+            "description": "Hide column headers"
+          },
+          "output": {
+            "type": "string",
+            "description": "Output format",
+            "enum": [
+              "name"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "config",
+        "get-contexts",
+        "{{if .no_headers}}--no-headers{{end}}",
+        "{{with .output}}--output={{.}}{{end}}",
+        "{{with .name}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_config_use_context",
+      "description": "Set the current kubeconfig context",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "name": {
+            "type": "string",
+            "description": "Context name",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "config",
+        "use-context",
+        "{{.name}}"
+      ]
+    },
+    {
+      "name": "kubectl_config_view",
+      "description": "Display merged kubeconfig settings",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+        "minify": {
+          "type": "boolean",
+          "description": "Show only information for the current context"
+        },
+          "output": {
+            "type": "string",
+            "description": "Output format",
+            "enum": [
+              "json",
+              "yaml",
+              "jsonpath"
+            ]
+          },
+          "jsonpath": {
+            "type": "string",
+            "description": "JSONPath expression used when output is jsonpath"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "config",
+        "view",
+        "{{if .minify}}--minify{{end}}",
+        "{{if eq .output \"jsonpath\"}}--output=jsonpath={{.jsonpath}}{{end}}",
+        "{{if and .output (ne .output \"jsonpath\")}}--output={{.output}}{{end}}"
+      ]
+    },
+    {
+      "name": "kubectl_version",
+      "description": "Show kubectl client and Kubernetes server versions",
+      "input": {
+        "type": "object",
+        "properties": {
+          "kubeconfig": {
+            "type": "string",
+            "description": "Path to the kubeconfig file"
+          },
+          "context": {
+            "type": "string",
+            "description": "Kubeconfig context to use"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for the request"
+          },
+          "request_timeout": {
+            "type": "string",
+            "description": "Timeout for a single API request"
+          },
+          "client_only": {
+            "type": "boolean",
+            "description": "Show only the kubectl client version"
+          },
+          "output": {
+            "type": "string",
+            "description": "Output format",
+            "enum": [
+              "json",
+              "yaml"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "kubectl",
+        "{{with .kubeconfig}}--kubeconfig={{.}}{{end}}",
+        "{{with .context}}--context={{.}}{{end}}",
+        "{{with .namespace}}--namespace={{.}}{{end}}",
+        "{{with .request_timeout}}--request-timeout={{.}}{{end}}",
+        "version",
+        "{{if .client_only}}--client{{end}}",
+        "{{with .output}}--output={{.}}{{end}}"
+      ]
+    }
+  ]
+}

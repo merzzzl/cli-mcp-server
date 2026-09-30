@@ -1,0 +1,2213 @@
+{
+  "name": "docker",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "docker_build",
+      "description": "Build an image from a Dockerfile",
+      "input": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "string",
+            "description": "Build context path, URL, or -",
+            "minLength": 1
+          },
+          "tag": {
+            "type": "string",
+            "description": "Name and optional tag for the image"
+          },
+          "file": {
+            "type": "string",
+            "description": "Dockerfile path"
+          },
+          "target": {
+            "type": "string",
+            "description": "Target build stage"
+          },
+          "build_arg": {
+            "type": "string",
+            "description": "One build argument in NAME=VALUE form"
+          },
+          "platform": {
+            "type": "string",
+            "description": "Target platform"
+          },
+          "no_cache": {
+            "type": "boolean",
+            "description": "Do not use the build cache"
+          },
+          "pull": {
+            "type": "boolean",
+            "description": "Always attempt to pull newer base images"
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Write only the image ID"
+          }
+        },
+        "required": [
+          "context"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "build",
+        "{{with .tag}}--tag={{.}}{{end}}",
+        "{{with .file}}--file={{.}}{{end}}",
+        "{{with .target}}--target={{.}}{{end}}",
+        "{{with .build_arg}}--build-arg={{.}}{{end}}",
+        "{{with .platform}}--platform={{.}}{{end}}",
+        "{{if .no_cache}}--no-cache{{end}}",
+        "{{if .pull}}--pull{{end}}",
+        "{{if .quiet}}--quiet{{end}}",
+        "{{.context}}"
+      ]
+    },
+    {
+      "name": "docker_pull",
+      "description": "Download an image from a registry",
+      "input": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "Image reference",
+            "minLength": 1
+          },
+          "platform": {
+            "type": "string",
+            "description": "Platform to pull"
+          },
+          "all_tags": {
+            "type": "boolean",
+            "description": "Download all tagged images in the repository"
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Suppress verbose output"
+          }
+        },
+        "required": [
+          "image"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "pull",
+        "{{with .platform}}--platform={{.}}{{end}}",
+        "{{if .all_tags}}--all-tags{{end}}",
+        "{{if .quiet}}--quiet{{end}}",
+        "{{.image}}"
+      ]
+    },
+    {
+      "name": "docker_push",
+      "description": "Upload an image to a registry",
+      "input": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "Image reference",
+            "minLength": 1
+          },
+          "all_tags": {
+            "type": "boolean",
+            "description": "Push all tagged images in the repository"
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Suppress verbose output"
+          }
+        },
+        "required": [
+          "image"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "push",
+        "{{if .all_tags}}--all-tags{{end}}",
+        "{{if .quiet}}--quiet{{end}}",
+        "{{.image}}"
+      ]
+    },
+    {
+      "name": "docker_images",
+      "description": "List local images",
+      "input": {
+        "type": "object",
+        "properties": {
+          "all": {
+            "type": "boolean",
+            "description": "Show intermediate images"
+          },
+          "digests": {
+            "type": "boolean",
+            "description": "Show image digests"
+          },
+          "filter": {
+            "type": "string",
+            "description": "Filter in key=value form"
+          },
+          "format": {
+            "type": "string",
+            "description": "Output format"
+          },
+          "no_trunc": {
+            "type": "boolean",
+            "description": "Do not truncate output"
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Show only image IDs"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "images",
+        "{{if .all}}--all{{end}}",
+        "{{if .digests}}--digests{{end}}",
+        "{{with .filter}}--filter={{.}}{{end}}",
+        "{{with .format}}--format={{.}}{{end}}",
+        "{{if .no_trunc}}--no-trunc{{end}}",
+        "{{if .quiet}}--quiet{{end}}"
+      ]
+    },
+    {
+      "name": "docker_history",
+      "description": "Show the history of an image",
+      "input": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "Image reference",
+            "minLength": 1
+          },
+          "format": {
+            "type": "string",
+            "description": "Output format"
+          },
+          "human": {
+            "type": "boolean",
+            "description": "Print sizes and dates in human-readable form"
+          },
+          "no_trunc": {
+            "type": "boolean",
+            "description": "Do not truncate output"
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Show only IDs"
+          }
+        },
+        "required": [
+          "image"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "history",
+        "{{with .format}}--format={{.}}{{end}}",
+        "{{if .human}}--human{{end}}",
+        "{{if .no_trunc}}--no-trunc{{end}}",
+        "{{if .quiet}}--quiet{{end}}",
+        "{{.image}}"
+      ]
+    },
+    {
+      "name": "docker_inspect",
+      "description": "Return detailed information about a Docker object",
+      "input": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "description": "Container, image, network, volume, or other object name or ID",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "description": "Restrict the object type",
+            "enum": [
+              "container",
+              "image",
+              "node",
+              "network",
+              "secret",
+              "service",
+              "volume",
+              "task",
+              "plugin"
+            ]
+          },
+          "format": {
+            "type": "string",
+            "description": "Go template used to format the result"
+          },
+          "size": {
+            "type": "boolean",
+            "description": "Include container filesystem sizes"
+          }
+        },
+        "required": [
+          "object"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "inspect",
+        "{{with .type}}--type={{.}}{{end}}",
+        "{{with .format}}--format={{.}}{{end}}",
+        "{{if .size}}--size{{end}}",
+        "{{.object}}"
+      ]
+    },
+    {
+      "name": "docker_tag",
+      "description": "Create a target tag for an image",
+      "input": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "Source image reference",
+            "minLength": 1
+          },
+          "target": {
+            "type": "string",
+            "description": "Target image reference",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "source",
+          "target"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "tag",
+        "{{.source}}",
+        "{{.target}}"
+      ]
+    },
+    {
+      "name": "docker_rmi",
+      "description": "Remove a local image",
+      "input": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "Image name or ID",
+            "minLength": 1
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Force image removal"
+          },
+          "no_prune": {
+            "type": "boolean",
+            "description": "Do not delete untagged parents"
+          }
+        },
+        "required": [
+          "image"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "rmi",
+        "{{if .force}}--force{{end}}",
+        "{{if .no_prune}}--no-prune{{end}}",
+        "{{.image}}"
+      ]
+    },
+    {
+      "name": "docker_save",
+      "description": "Save an image to a tar archive",
+      "input": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "Image reference",
+            "minLength": 1
+          },
+          "output": {
+            "type": "string",
+            "description": "Output tar archive path",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "image",
+          "output"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "save",
+        "--output",
+        "{{.output}}",
+        "{{.image}}"
+      ]
+    },
+    {
+      "name": "docker_load",
+      "description": "Load images from a tar archive",
+      "input": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "type": "string",
+            "description": "Input tar archive path",
+            "minLength": 1
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Suppress load output"
+          },
+          "platform": {
+            "type": "string",
+            "description": "Load only the requested platform"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "load",
+        "--input",
+        "{{.input}}",
+        "{{if .quiet}}--quiet{{end}}",
+        "{{with .platform}}--platform={{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_run",
+      "description": "Create and run a container",
+      "input": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "Image reference",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Container name"
+          },
+          "detach": {
+            "type": "boolean",
+            "description": "Run in the background"
+          },
+          "remove": {
+            "type": "boolean",
+            "description": "Remove the container when it exits"
+          },
+          "environment": {
+            "type": "string",
+            "description": "One environment variable in NAME=VALUE form"
+          },
+          "publish": {
+            "type": "string",
+            "description": "One port mapping in HOST:CONTAINER form"
+          },
+          "volume": {
+            "type": "string",
+            "description": "One volume or bind mount in SOURCE:TARGET form"
+          },
+          "network": {
+            "type": "string",
+            "description": "Network name"
+          },
+          "workdir": {
+            "type": "string",
+            "description": "Working directory inside the container"
+          },
+          "user": {
+            "type": "string",
+            "description": "Username or UID"
+          },
+          "entrypoint": {
+            "type": "string",
+            "description": "Entrypoint executable"
+          },
+          "executable": {
+            "type": "string",
+            "description": "Command executable inside the container"
+          },
+          "option": {
+            "type": "string",
+            "description": "One option passed to the executable"
+          },
+          "operand": {
+            "type": "string",
+            "description": "One operand passed to the executable"
+          }
+        },
+        "required": [
+          "image"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "run",
+        "{{with .name}}--name={{.}}{{end}}",
+        "{{if .detach}}--detach{{end}}",
+        "{{if .remove}}--rm{{end}}",
+        "{{with .environment}}--env={{.}}{{end}}",
+        "{{with .publish}}--publish={{.}}{{end}}",
+        "{{with .volume}}--volume={{.}}{{end}}",
+        "{{with .network}}--network={{.}}{{end}}",
+        "{{with .workdir}}--workdir={{.}}{{end}}",
+        "{{with .user}}--user={{.}}{{end}}",
+        "{{with .entrypoint}}--entrypoint={{.}}{{end}}",
+        "{{.image}}",
+        "{{with .executable}}{{.}}{{end}}",
+        "{{with .option}}{{.}}{{end}}",
+        "{{with .operand}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_create",
+      "description": "Create a container without starting it",
+      "input": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "Image reference",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Container name"
+          },
+          "environment": {
+            "type": "string",
+            "description": "One environment variable in NAME=VALUE form"
+          },
+          "publish": {
+            "type": "string",
+            "description": "One port mapping in HOST:CONTAINER form"
+          },
+          "volume": {
+            "type": "string",
+            "description": "One volume or bind mount in SOURCE:TARGET form"
+          },
+          "network": {
+            "type": "string",
+            "description": "Network name"
+          },
+          "workdir": {
+            "type": "string",
+            "description": "Working directory inside the container"
+          },
+          "user": {
+            "type": "string",
+            "description": "Username or UID"
+          },
+          "entrypoint": {
+            "type": "string",
+            "description": "Entrypoint executable"
+          },
+          "executable": {
+            "type": "string",
+            "description": "Command executable inside the container"
+          },
+          "option": {
+            "type": "string",
+            "description": "One option passed to the executable"
+          },
+          "operand": {
+            "type": "string",
+            "description": "One operand passed to the executable"
+          }
+        },
+        "required": [
+          "image"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "create",
+        "{{with .name}}--name={{.}}{{end}}",
+        "{{with .environment}}--env={{.}}{{end}}",
+        "{{with .publish}}--publish={{.}}{{end}}",
+        "{{with .volume}}--volume={{.}}{{end}}",
+        "{{with .network}}--network={{.}}{{end}}",
+        "{{with .workdir}}--workdir={{.}}{{end}}",
+        "{{with .user}}--user={{.}}{{end}}",
+        "{{with .entrypoint}}--entrypoint={{.}}{{end}}",
+        "{{.image}}",
+        "{{with .executable}}{{.}}{{end}}",
+        "{{with .option}}{{.}}{{end}}",
+        "{{with .operand}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_exec",
+      "description": "Execute a command in a running container",
+      "input": {
+        "type": "object",
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "Container name or ID",
+            "minLength": 1
+          },
+          "executable": {
+            "type": "string",
+            "description": "Executable inside the container",
+            "minLength": 1
+          },
+          "option": {
+            "type": "string",
+            "description": "One option passed to the executable"
+          },
+          "operand": {
+            "type": "string",
+            "description": "One operand passed to the executable"
+          },
+          "environment": {
+            "type": "string",
+            "description": "One environment variable in NAME=VALUE form"
+          },
+          "workdir": {
+            "type": "string",
+            "description": "Working directory inside the container"
+          },
+          "user": {
+            "type": "string",
+            "description": "Username or UID"
+          },
+          "detach": {
+            "type": "boolean",
+            "description": "Run in the background"
+          }
+        },
+        "required": [
+          "container",
+          "executable"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "exec",
+        "{{if .detach}}--detach{{end}}",
+        "{{with .environment}}--env={{.}}{{end}}",
+        "{{with .workdir}}--workdir={{.}}{{end}}",
+        "{{with .user}}--user={{.}}{{end}}",
+        "{{.container}}",
+        "{{.executable}}",
+        "{{with .option}}{{.}}{{end}}",
+        "{{with .operand}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_ps",
+      "description": "List containers",
+      "input": {
+        "type": "object",
+        "properties": {
+          "all": {
+            "type": "boolean",
+            "description": "Show stopped containers"
+          },
+          "filter": {
+            "type": "string",
+            "description": "Filter in key=value form"
+          },
+          "format": {
+            "type": "string",
+            "description": "Output format"
+          },
+          "last": {
+            "type": "integer",
+            "description": "Show the most recently created containers",
+            "minimum": 1
+          },
+          "latest": {
+            "type": "boolean",
+            "description": "Show only the latest created container"
+          },
+          "no_trunc": {
+            "type": "boolean",
+            "description": "Do not truncate output"
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Show only container IDs"
+          },
+          "size": {
+            "type": "boolean",
+            "description": "Show total file sizes"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "ps",
+        "{{if .all}}--all{{end}}",
+        "{{with .filter}}--filter={{.}}{{end}}",
+        "{{with .format}}--format={{.}}{{end}}",
+        "{{with .last}}--last={{.}}{{end}}",
+        "{{if .latest}}--latest{{end}}",
+        "{{if .no_trunc}}--no-trunc{{end}}",
+        "{{if .quiet}}--quiet{{end}}",
+        "{{if .size}}--size{{end}}"
+      ]
+    },
+    {
+      "name": "docker_logs",
+      "description": "Fetch container logs",
+      "input": {
+        "type": "object",
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "Container name or ID",
+            "minLength": 1
+          },
+          "details": {
+            "type": "boolean",
+            "description": "Show extra log details"
+          },
+          "since": {
+            "type": "string",
+            "description": "Show logs newer than this timestamp or duration"
+          },
+          "until": {
+            "type": "string",
+            "description": "Show logs older than this timestamp or duration"
+          },
+          "tail": {
+            "type": "string",
+            "description": "Number of lines or all"
+          },
+          "timestamps": {
+            "type": "boolean",
+            "description": "Show timestamps"
+          }
+        },
+        "required": [
+          "container"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "logs",
+        "{{if .details}}--details{{end}}",
+        "{{with .since}}--since={{.}}{{end}}",
+        "{{with .until}}--until={{.}}{{end}}",
+        "{{with .tail}}--tail={{.}}{{end}}",
+        "{{if .timestamps}}--timestamps{{end}}",
+        "{{.container}}"
+      ]
+    },
+    {
+      "name": "docker_start",
+      "description": "Start a stopped container",
+      "input": {
+        "type": "object",
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "Container name or ID",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "container"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "start",
+        "{{.container}}"
+      ]
+    },
+    {
+      "name": "docker_stop",
+      "description": "Stop a running container",
+      "input": {
+        "type": "object",
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "Container name or ID",
+            "minLength": 1
+          },
+          "signal": {
+            "type": "string",
+            "description": "Signal sent to the container"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Seconds to wait before killing the container",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "container"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "stop",
+        "{{with .signal}}--signal={{.}}{{end}}",
+        "{{with .timeout}}--timeout={{.}}{{end}}",
+        "{{.container}}"
+      ]
+    },
+    {
+      "name": "docker_restart",
+      "description": "Restart a container",
+      "input": {
+        "type": "object",
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "Container name or ID",
+            "minLength": 1
+          },
+          "signal": {
+            "type": "string",
+            "description": "Signal sent to the container"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Seconds to wait before killing the container",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "container"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "restart",
+        "{{with .signal}}--signal={{.}}{{end}}",
+        "{{with .timeout}}--timeout={{.}}{{end}}",
+        "{{.container}}"
+      ]
+    },
+    {
+      "name": "docker_kill",
+      "description": "Send a signal to a running container",
+      "input": {
+        "type": "object",
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "Container name or ID",
+            "minLength": 1
+          },
+          "signal": {
+            "type": "string",
+            "description": "Signal to send"
+          }
+        },
+        "required": [
+          "container"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "kill",
+        "{{with .signal}}--signal={{.}}{{end}}",
+        "{{.container}}"
+      ]
+    },
+    {
+      "name": "docker_rm",
+      "description": "Remove a container",
+      "input": {
+        "type": "object",
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "Container name or ID",
+            "minLength": 1
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Force removal of a running container"
+          },
+          "volumes": {
+            "type": "boolean",
+            "description": "Remove anonymous volumes"
+          }
+        },
+        "required": [
+          "container"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "rm",
+        "{{if .force}}--force{{end}}",
+        "{{if .volumes}}--volumes{{end}}",
+        "{{.container}}"
+      ]
+    },
+    {
+      "name": "docker_cp",
+      "description": "Copy files between a container and the local filesystem",
+      "input": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "Source path, optionally in CONTAINER:PATH form",
+            "minLength": 1
+          },
+          "destination": {
+            "type": "string",
+            "description": "Destination path, optionally in CONTAINER:PATH form",
+            "minLength": 1
+          },
+          "archive": {
+            "type": "boolean",
+            "description": "Preserve ownership information"
+          },
+          "follow_link": {
+            "type": "boolean",
+            "description": "Follow symbolic links in the source"
+          }
+        },
+        "required": [
+          "source",
+          "destination"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "cp",
+        "{{if .archive}}--archive{{end}}",
+        "{{if .follow_link}}--follow-link{{end}}",
+        "{{.source}}",
+        "{{.destination}}"
+      ]
+    },
+    {
+      "name": "docker_diff",
+      "description": "Inspect filesystem changes in a container",
+      "input": {
+        "type": "object",
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "Container name or ID",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "container"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "diff",
+        "{{.container}}"
+      ]
+    },
+    {
+      "name": "docker_port",
+      "description": "List container port mappings",
+      "input": {
+        "type": "object",
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "Container name or ID",
+            "minLength": 1
+          },
+          "private_port": {
+            "type": "string",
+            "description": "Container port and optional protocol"
+          }
+        },
+        "required": [
+          "container"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "port",
+        "{{.container}}",
+        "{{with .private_port}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_top",
+      "description": "Display processes running in a container",
+      "input": {
+        "type": "object",
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "Container name or ID",
+            "minLength": 1
+          },
+          "ps_options": {
+            "type": "string",
+            "description": "One ps option string"
+          }
+        },
+        "required": [
+          "container"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "top",
+        "{{.container}}",
+        "{{with .ps_options}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_stats",
+      "description": "Show a single resource-usage snapshot",
+      "input": {
+        "type": "object",
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "Container name or ID"
+          },
+          "all": {
+            "type": "boolean",
+            "description": "Show all containers"
+          },
+          "no_trunc": {
+            "type": "boolean",
+            "description": "Do not truncate output"
+          },
+          "format": {
+            "type": "string",
+            "description": "Output format"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "stats",
+        "--no-stream",
+        "{{if .all}}--all{{end}}",
+        "{{if .no_trunc}}--no-trunc{{end}}",
+        "{{with .format}}--format={{.}}{{end}}",
+        "{{with .container}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_wait",
+      "description": "Wait until a container reaches a condition",
+      "input": {
+        "type": "object",
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "Container name or ID",
+            "minLength": 1
+          },
+          "condition": {
+            "type": "string",
+            "description": "Condition to wait for",
+            "enum": [
+              "not-running",
+              "next-exit",
+              "removed"
+            ]
+          }
+        },
+        "required": [
+          "container"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "wait",
+        "{{with .condition}}--condition={{.}}{{end}}",
+        "{{.container}}"
+      ]
+    },
+    {
+      "name": "docker_rename",
+      "description": "Rename a container",
+      "input": {
+        "type": "object",
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "Current container name or ID",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "New container name",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "container",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "rename",
+        "{{.container}}",
+        "{{.name}}"
+      ]
+    },
+    {
+      "name": "docker_network_ls",
+      "description": "List Docker networks",
+      "input": {
+        "type": "object",
+        "properties": {
+          "filter": {
+            "type": "string",
+            "description": "Filter in key=value form"
+          },
+          "format": {
+            "type": "string",
+            "description": "Output format"
+          },
+          "no_trunc": {
+            "type": "boolean",
+            "description": "Do not truncate output"
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Show only network IDs"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "network",
+        "ls",
+        "{{with .filter}}--filter={{.}}{{end}}",
+        "{{with .format}}--format={{.}}{{end}}",
+        "{{if .no_trunc}}--no-trunc{{end}}",
+        "{{if .quiet}}--quiet{{end}}"
+      ]
+    },
+    {
+      "name": "docker_network_create",
+      "description": "Create a Docker network",
+      "input": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Network name",
+            "minLength": 1
+          },
+          "driver": {
+            "type": "string",
+            "description": "Network driver"
+          },
+          "subnet": {
+            "type": "string",
+            "description": "Subnet in CIDR format"
+          },
+          "gateway": {
+            "type": "string",
+            "description": "Gateway address"
+          },
+          "internal": {
+            "type": "boolean",
+            "description": "Restrict external access"
+          },
+          "attachable": {
+            "type": "boolean",
+            "description": "Allow manually attached containers"
+          },
+          "ipv6": {
+            "type": "boolean",
+            "description": "Enable IPv6"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "network",
+        "create",
+        "{{with .driver}}--driver={{.}}{{end}}",
+        "{{with .subnet}}--subnet={{.}}{{end}}",
+        "{{with .gateway}}--gateway={{.}}{{end}}",
+        "{{if .internal}}--internal{{end}}",
+        "{{if .attachable}}--attachable{{end}}",
+        "{{if .ipv6}}--ipv6{{end}}",
+        "{{.name}}"
+      ]
+    },
+    {
+      "name": "docker_network_inspect",
+      "description": "Show detailed information about a network",
+      "input": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "description": "Network name or ID",
+            "minLength": 1
+          },
+          "format": {
+            "type": "string",
+            "description": "Go template used to format the result"
+          },
+          "verbose": {
+            "type": "boolean",
+            "description": "Show diagnostic details"
+          }
+        },
+        "required": [
+          "network"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "network",
+        "inspect",
+        "{{with .format}}--format={{.}}{{end}}",
+        "{{if .verbose}}--verbose{{end}}",
+        "{{.network}}"
+      ]
+    },
+    {
+      "name": "docker_network_connect",
+      "description": "Connect a container to a network",
+      "input": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "description": "Network name or ID",
+            "minLength": 1
+          },
+          "container": {
+            "type": "string",
+            "description": "Container name or ID",
+            "minLength": 1
+          },
+          "alias": {
+            "type": "string",
+            "description": "Network-scoped alias"
+          },
+          "ip": {
+            "type": "string",
+            "description": "IPv4 address"
+          },
+          "ip6": {
+            "type": "string",
+            "description": "IPv6 address"
+          }
+        },
+        "required": [
+          "network",
+          "container"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "network",
+        "connect",
+        "{{with .alias}}--alias={{.}}{{end}}",
+        "{{with .ip}}--ip={{.}}{{end}}",
+        "{{with .ip6}}--ip6={{.}}{{end}}",
+        "{{.network}}",
+        "{{.container}}"
+      ]
+    },
+    {
+      "name": "docker_network_disconnect",
+      "description": "Disconnect a container from a network",
+      "input": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "description": "Network name or ID",
+            "minLength": 1
+          },
+          "container": {
+            "type": "string",
+            "description": "Container name or ID",
+            "minLength": 1
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Force disconnection"
+          }
+        },
+        "required": [
+          "network",
+          "container"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "network",
+        "disconnect",
+        "{{if .force}}--force{{end}}",
+        "{{.network}}",
+        "{{.container}}"
+      ]
+    },
+    {
+      "name": "docker_network_rm",
+      "description": "Remove a Docker network",
+      "input": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "description": "Network name or ID",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "network"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "network",
+        "rm",
+        "{{.network}}"
+      ]
+    },
+    {
+      "name": "docker_volume_ls",
+      "description": "List Docker volumes",
+      "input": {
+        "type": "object",
+        "properties": {
+          "filter": {
+            "type": "string",
+            "description": "Filter in key=value form"
+          },
+          "format": {
+            "type": "string",
+            "description": "Output format"
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Show only volume names"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "volume",
+        "ls",
+        "{{with .filter}}--filter={{.}}{{end}}",
+        "{{with .format}}--format={{.}}{{end}}",
+        "{{if .quiet}}--quiet{{end}}"
+      ]
+    },
+    {
+      "name": "docker_volume_create",
+      "description": "Create a Docker volume",
+      "input": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Volume name"
+          },
+          "driver": {
+            "type": "string",
+            "description": "Volume driver"
+          },
+          "driver_option": {
+            "type": "string",
+            "description": "One driver option in key=value form"
+          },
+          "label": {
+            "type": "string",
+            "description": "One label in key=value form"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "volume",
+        "create",
+        "{{with .driver}}--driver={{.}}{{end}}",
+        "{{with .driver_option}}--opt={{.}}{{end}}",
+        "{{with .label}}--label={{.}}{{end}}",
+        "{{with .name}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_volume_inspect",
+      "description": "Show detailed information about a volume",
+      "input": {
+        "type": "object",
+        "properties": {
+          "volume": {
+            "type": "string",
+            "description": "Volume name",
+            "minLength": 1
+          },
+          "format": {
+            "type": "string",
+            "description": "Go template used to format the result"
+          }
+        },
+        "required": [
+          "volume"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "volume",
+        "inspect",
+        "{{with .format}}--format={{.}}{{end}}",
+        "{{.volume}}"
+      ]
+    },
+    {
+      "name": "docker_volume_rm",
+      "description": "Remove a Docker volume",
+      "input": {
+        "type": "object",
+        "properties": {
+          "volume": {
+            "type": "string",
+            "description": "Volume name",
+            "minLength": 1
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Force removal"
+          }
+        },
+        "required": [
+          "volume"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "volume",
+        "rm",
+        "{{if .force}}--force{{end}}",
+        "{{.volume}}"
+      ]
+    },
+    {
+      "name": "docker_compose_config",
+      "description": "Parse and render a Compose configuration",
+      "input": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Compose file path"
+          },
+          "project_name": {
+            "type": "string",
+            "description": "Compose project name"
+          },
+          "profile": {
+            "type": "string",
+            "description": "Compose profile to enable"
+          },
+          "env_file": {
+            "type": "string",
+            "description": "Environment file path"
+          },
+          "service": {
+            "type": "string",
+            "description": "Service whose configuration is requested"
+          },
+          "images": {
+            "type": "boolean",
+            "description": "Print image names"
+          },
+          "profiles": {
+            "type": "boolean",
+            "description": "Print profile names"
+          },
+          "services": {
+            "type": "boolean",
+            "description": "Print service names"
+          },
+          "volumes": {
+            "type": "boolean",
+            "description": "Print volume names"
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Only validate the configuration"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "compose",
+        "{{with .file}}--file={{.}}{{end}}",
+        "{{with .project_name}}--project-name={{.}}{{end}}",
+        "{{with .profile}}--profile={{.}}{{end}}",
+        "{{with .env_file}}--env-file={{.}}{{end}}",
+        "config",
+        "{{if .images}}--images{{end}}",
+        "{{if .profiles}}--profiles{{end}}",
+        "{{if .services}}--services{{end}}",
+        "{{if .volumes}}--volumes{{end}}",
+        "{{if .quiet}}--quiet{{end}}",
+        "{{with .service}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_compose_build",
+      "description": "Build or rebuild Compose services",
+      "input": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Compose file path"
+          },
+          "project_name": {
+            "type": "string",
+            "description": "Compose project name"
+          },
+          "profile": {
+            "type": "string",
+            "description": "Compose profile to enable"
+          },
+          "env_file": {
+            "type": "string",
+            "description": "Environment file path"
+          },
+          "service": {
+            "type": "string",
+            "description": "Service to build"
+          },
+          "build_arg": {
+            "type": "string",
+            "description": "One build argument in NAME=VALUE form"
+          },
+          "no_cache": {
+            "type": "boolean",
+            "description": "Do not use the build cache"
+          },
+          "pull": {
+            "type": "boolean",
+            "description": "Always attempt to pull newer base images"
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Suppress build output"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "compose",
+        "{{with .file}}--file={{.}}{{end}}",
+        "{{with .project_name}}--project-name={{.}}{{end}}",
+        "{{with .profile}}--profile={{.}}{{end}}",
+        "{{with .env_file}}--env-file={{.}}{{end}}",
+        "build",
+        "{{with .build_arg}}--build-arg={{.}}{{end}}",
+        "{{if .no_cache}}--no-cache{{end}}",
+        "{{if .pull}}--pull{{end}}",
+        "{{if .quiet}}--quiet{{end}}",
+        "{{with .service}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_compose_up",
+      "description": "Create and start Compose services in the background",
+      "input": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Compose file path"
+          },
+          "project_name": {
+            "type": "string",
+            "description": "Compose project name"
+          },
+          "profile": {
+            "type": "string",
+            "description": "Compose profile to enable"
+          },
+          "env_file": {
+            "type": "string",
+            "description": "Environment file path"
+          },
+          "service": {
+            "type": "string",
+            "description": "Service to start"
+          },
+          "build": {
+            "type": "boolean",
+            "description": "Build images before starting"
+          },
+          "force_recreate": {
+            "type": "boolean",
+            "description": "Recreate containers even when unchanged"
+          },
+          "remove_orphans": {
+            "type": "boolean",
+            "description": "Remove containers for services no longer defined"
+          },
+          "renew_anon_volumes": {
+            "type": "boolean",
+            "description": "Recreate anonymous volumes"
+          },
+          "wait": {
+            "type": "boolean",
+            "description": "Wait for services to become running or healthy"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Shutdown timeout in seconds",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "compose",
+        "{{with .file}}--file={{.}}{{end}}",
+        "{{with .project_name}}--project-name={{.}}{{end}}",
+        "{{with .profile}}--profile={{.}}{{end}}",
+        "{{with .env_file}}--env-file={{.}}{{end}}",
+        "up",
+        "--detach",
+        "{{if .build}}--build{{end}}",
+        "{{if .force_recreate}}--force-recreate{{end}}",
+        "{{if .remove_orphans}}--remove-orphans{{end}}",
+        "{{if .renew_anon_volumes}}--renew-anon-volumes{{end}}",
+        "{{if .wait}}--wait{{end}}",
+        "{{with .timeout}}--timeout={{.}}{{end}}",
+        "{{with .service}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_compose_down",
+      "description": "Stop and remove Compose resources",
+      "input": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Compose file path"
+          },
+          "project_name": {
+            "type": "string",
+            "description": "Compose project name"
+          },
+          "profile": {
+            "type": "string",
+            "description": "Compose profile to enable"
+          },
+          "env_file": {
+            "type": "string",
+            "description": "Environment file path"
+          },
+          "volumes": {
+            "type": "boolean",
+            "description": "Remove named and anonymous volumes"
+          },
+          "remove_orphans": {
+            "type": "boolean",
+            "description": "Remove containers for services no longer defined"
+          },
+          "images": {
+            "type": "string",
+            "description": "Remove images",
+            "enum": [
+              "all",
+              "local"
+            ]
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Shutdown timeout in seconds",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "compose",
+        "{{with .file}}--file={{.}}{{end}}",
+        "{{with .project_name}}--project-name={{.}}{{end}}",
+        "{{with .profile}}--profile={{.}}{{end}}",
+        "{{with .env_file}}--env-file={{.}}{{end}}",
+        "down",
+        "{{if .volumes}}--volumes{{end}}",
+        "{{if .remove_orphans}}--remove-orphans{{end}}",
+        "{{with .images}}--rmi={{.}}{{end}}",
+        "{{with .timeout}}--timeout={{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_compose_ps",
+      "description": "List Compose service containers",
+      "input": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Compose file path"
+          },
+          "project_name": {
+            "type": "string",
+            "description": "Compose project name"
+          },
+          "profile": {
+            "type": "string",
+            "description": "Compose profile to enable"
+          },
+          "env_file": {
+            "type": "string",
+            "description": "Environment file path"
+          },
+          "service": {
+            "type": "string",
+            "description": "Service to list"
+          },
+          "all": {
+            "type": "boolean",
+            "description": "Show stopped containers"
+          },
+          "format": {
+            "type": "string",
+            "description": "Output format"
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Show only container IDs"
+          },
+          "status": {
+            "type": "string",
+            "description": "Filter by container status",
+            "enum": [
+              "paused",
+              "restarting",
+              "removing",
+              "running",
+              "dead",
+              "created",
+              "exited"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "compose",
+        "{{with .file}}--file={{.}}{{end}}",
+        "{{with .project_name}}--project-name={{.}}{{end}}",
+        "{{with .profile}}--profile={{.}}{{end}}",
+        "{{with .env_file}}--env-file={{.}}{{end}}",
+        "ps",
+        "{{if .all}}--all{{end}}",
+        "{{with .format}}--format={{.}}{{end}}",
+        "{{if .quiet}}--quiet{{end}}",
+        "{{with .status}}--status={{.}}{{end}}",
+        "{{with .service}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_compose_logs",
+      "description": "Show Compose service logs",
+      "input": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Compose file path"
+          },
+          "project_name": {
+            "type": "string",
+            "description": "Compose project name"
+          },
+          "profile": {
+            "type": "string",
+            "description": "Compose profile to enable"
+          },
+          "env_file": {
+            "type": "string",
+            "description": "Environment file path"
+          },
+          "service": {
+            "type": "string",
+            "description": "Service whose logs are requested"
+          },
+          "no_color": {
+            "type": "boolean",
+            "description": "Disable colored output"
+          },
+          "no_log_prefix": {
+            "type": "boolean",
+            "description": "Hide service-name prefixes"
+          },
+          "since": {
+            "type": "string",
+            "description": "Show logs newer than this timestamp or duration"
+          },
+          "tail": {
+            "type": "string",
+            "description": "Number of lines or all"
+          },
+          "timestamps": {
+            "type": "boolean",
+            "description": "Show timestamps"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "compose",
+        "{{with .file}}--file={{.}}{{end}}",
+        "{{with .project_name}}--project-name={{.}}{{end}}",
+        "{{with .profile}}--profile={{.}}{{end}}",
+        "{{with .env_file}}--env-file={{.}}{{end}}",
+        "logs",
+        "{{if .no_color}}--no-color{{end}}",
+        "{{if .no_log_prefix}}--no-log-prefix{{end}}",
+        "{{with .since}}--since={{.}}{{end}}",
+        "{{with .tail}}--tail={{.}}{{end}}",
+        "{{if .timestamps}}--timestamps{{end}}",
+        "{{with .service}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_compose_pull",
+      "description": "Pull images for Compose services",
+      "input": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Compose file path"
+          },
+          "project_name": {
+            "type": "string",
+            "description": "Compose project name"
+          },
+          "profile": {
+            "type": "string",
+            "description": "Compose profile to enable"
+          },
+          "env_file": {
+            "type": "string",
+            "description": "Environment file path"
+          },
+          "service": {
+            "type": "string",
+            "description": "Service whose image is pulled"
+          },
+          "ignore_buildable": {
+            "type": "boolean",
+            "description": "Ignore services that can be built"
+          },
+          "include_deps": {
+            "type": "boolean",
+            "description": "Also pull dependent services"
+          },
+          "policy": {
+            "type": "string",
+            "description": "Pull policy",
+            "enum": [
+              "missing",
+              "always"
+            ]
+          },
+          "quiet": {
+            "type": "boolean",
+            "description": "Suppress progress output"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "compose",
+        "{{with .file}}--file={{.}}{{end}}",
+        "{{with .project_name}}--project-name={{.}}{{end}}",
+        "{{with .profile}}--profile={{.}}{{end}}",
+        "{{with .env_file}}--env-file={{.}}{{end}}",
+        "pull",
+        "{{if .ignore_buildable}}--ignore-buildable{{end}}",
+        "{{if .include_deps}}--include-deps{{end}}",
+        "{{with .policy}}--policy={{.}}{{end}}",
+        "{{if .quiet}}--quiet{{end}}",
+        "{{with .service}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_compose_start",
+      "description": "Start existing Compose service containers",
+      "input": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Compose file path"
+          },
+          "project_name": {
+            "type": "string",
+            "description": "Compose project name"
+          },
+          "profile": {
+            "type": "string",
+            "description": "Compose profile to enable"
+          },
+          "env_file": {
+            "type": "string",
+            "description": "Environment file path"
+          },
+          "service": {
+            "type": "string",
+            "description": "Service to start"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "compose",
+        "{{with .file}}--file={{.}}{{end}}",
+        "{{with .project_name}}--project-name={{.}}{{end}}",
+        "{{with .profile}}--profile={{.}}{{end}}",
+        "{{with .env_file}}--env-file={{.}}{{end}}",
+        "start",
+        "{{with .service}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_compose_stop",
+      "description": "Stop Compose service containers",
+      "input": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Compose file path"
+          },
+          "project_name": {
+            "type": "string",
+            "description": "Compose project name"
+          },
+          "profile": {
+            "type": "string",
+            "description": "Compose profile to enable"
+          },
+          "env_file": {
+            "type": "string",
+            "description": "Environment file path"
+          },
+          "service": {
+            "type": "string",
+            "description": "Service to stop"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Shutdown timeout in seconds",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "compose",
+        "{{with .file}}--file={{.}}{{end}}",
+        "{{with .project_name}}--project-name={{.}}{{end}}",
+        "{{with .profile}}--profile={{.}}{{end}}",
+        "{{with .env_file}}--env-file={{.}}{{end}}",
+        "stop",
+        "{{with .timeout}}--timeout={{.}}{{end}}",
+        "{{with .service}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_compose_restart",
+      "description": "Restart Compose service containers",
+      "input": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Compose file path"
+          },
+          "project_name": {
+            "type": "string",
+            "description": "Compose project name"
+          },
+          "profile": {
+            "type": "string",
+            "description": "Compose profile to enable"
+          },
+          "env_file": {
+            "type": "string",
+            "description": "Environment file path"
+          },
+          "service": {
+            "type": "string",
+            "description": "Service to restart"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Shutdown timeout in seconds",
+            "minimum": 0
+          },
+          "no_deps": {
+            "type": "boolean",
+            "description": "Do not restart dependent services"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "compose",
+        "{{with .file}}--file={{.}}{{end}}",
+        "{{with .project_name}}--project-name={{.}}{{end}}",
+        "{{with .profile}}--profile={{.}}{{end}}",
+        "{{with .env_file}}--env-file={{.}}{{end}}",
+        "restart",
+        "{{with .timeout}}--timeout={{.}}{{end}}",
+        "{{if .no_deps}}--no-deps{{end}}",
+        "{{with .service}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_compose_exec",
+      "description": "Execute a command in a running Compose service",
+      "input": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Compose file path"
+          },
+          "project_name": {
+            "type": "string",
+            "description": "Compose project name"
+          },
+          "profile": {
+            "type": "string",
+            "description": "Compose profile to enable"
+          },
+          "env_file": {
+            "type": "string",
+            "description": "Environment file path"
+          },
+          "service": {
+            "type": "string",
+            "description": "Service name",
+            "minLength": 1
+          },
+          "executable": {
+            "type": "string",
+            "description": "Executable inside the service container",
+            "minLength": 1
+          },
+          "option": {
+            "type": "string",
+            "description": "One option passed to the executable"
+          },
+          "operand": {
+            "type": "string",
+            "description": "One operand passed to the executable"
+          },
+          "environment": {
+            "type": "string",
+            "description": "One environment variable in NAME=VALUE form"
+          },
+          "workdir": {
+            "type": "string",
+            "description": "Working directory inside the container"
+          },
+          "user": {
+            "type": "string",
+            "description": "Username or UID"
+          },
+          "privileged": {
+            "type": "boolean",
+            "description": "Run with extended privileges"
+          }
+        },
+        "required": [
+          "service",
+          "executable"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "compose",
+        "{{with .file}}--file={{.}}{{end}}",
+        "{{with .project_name}}--project-name={{.}}{{end}}",
+        "{{with .profile}}--profile={{.}}{{end}}",
+        "{{with .env_file}}--env-file={{.}}{{end}}",
+        "exec",
+        "--no-TTY",
+        "{{with .environment}}--env={{.}}{{end}}",
+        "{{with .workdir}}--workdir={{.}}{{end}}",
+        "{{with .user}}--user={{.}}{{end}}",
+        "{{if .privileged}}--privileged{{end}}",
+        "{{.service}}",
+        "{{.executable}}",
+        "{{with .option}}{{.}}{{end}}",
+        "{{with .operand}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "docker_compose_run",
+      "description": "Run a one-off command for a Compose service",
+      "input": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Compose file path"
+          },
+          "project_name": {
+            "type": "string",
+            "description": "Compose project name"
+          },
+          "profile": {
+            "type": "string",
+            "description": "Compose profile to enable"
+          },
+          "env_file": {
+            "type": "string",
+            "description": "Environment file path"
+          },
+          "service": {
+            "type": "string",
+            "description": "Service name",
+            "minLength": 1
+          },
+          "executable": {
+            "type": "string",
+            "description": "Executable inside the service container"
+          },
+          "option": {
+            "type": "string",
+            "description": "One option passed to the executable"
+          },
+          "operand": {
+            "type": "string",
+            "description": "One operand passed to the executable"
+          },
+          "environment": {
+            "type": "string",
+            "description": "One environment variable in NAME=VALUE form"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name for the one-off container"
+          },
+          "remove": {
+            "type": "boolean",
+            "description": "Remove the container after it exits"
+          },
+          "no_deps": {
+            "type": "boolean",
+            "description": "Do not start dependent services"
+          },
+          "service_ports": {
+            "type": "boolean",
+            "description": "Enable the service ports"
+          }
+        },
+        "required": [
+          "service"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "docker",
+        "compose",
+        "{{with .file}}--file={{.}}{{end}}",
+        "{{with .project_name}}--project-name={{.}}{{end}}",
+        "{{with .profile}}--profile={{.}}{{end}}",
+        "{{with .env_file}}--env-file={{.}}{{end}}",
+        "run",
+        "--no-TTY",
+        "{{with .environment}}--env={{.}}{{end}}",
+        "{{with .name}}--name={{.}}{{end}}",
+        "{{if .remove}}--rm{{end}}",
+        "{{if .no_deps}}--no-deps{{end}}",
+        "{{if .service_ports}}--service-ports{{end}}",
+        "{{.service}}",
+        "{{with .executable}}{{.}}{{end}}",
+        "{{with .option}}{{.}}{{end}}",
+        "{{with .operand}}{{.}}{{end}}"
+      ]
+    }
+  ]
+}

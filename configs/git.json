@@ -1,0 +1,1635 @@
+{
+  "name": "git",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "git_add",
+      "description": "Add file contents to the index",
+      "input": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Pathspec to add"
+          },
+          "all": {
+            "type": "boolean",
+            "description": "Stage all tracked and untracked changes"
+          },
+          "update": {
+            "type": "boolean",
+            "description": "Stage modifications and deletions of tracked files"
+          },
+          "patch": {
+            "type": "boolean",
+            "description": "Interactively choose hunks"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Allow adding ignored files"
+          },
+          "intent_to_add": {
+            "type": "boolean",
+            "description": "Record only that the path will be added"
+          },
+          "dry_run": {
+            "type": "boolean",
+            "description": "Show what would be added"
+          },
+          "verbose": {
+            "type": "boolean",
+            "description": "Show added paths"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "add",
+        "{{if .all}}--all{{end}}",
+        "{{if .update}}--update{{end}}",
+        "{{if .patch}}--patch{{end}}",
+        "{{if .force}}--force{{end}}",
+        "{{if .intent_to_add}}--intent-to-add{{end}}",
+        "{{if .dry_run}}--dry-run{{end}}",
+        "{{if .verbose}}--verbose{{end}}",
+        "{{with .path}}--{{end}}",
+        "{{with .path}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_branch",
+      "description": "List, create, rename, copy, or delete branches",
+      "input": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Branch operation",
+            "enum": [
+              "list",
+              "create",
+              "delete",
+              "force-delete",
+              "move",
+              "copy",
+              "show-current"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "Branch name or pattern"
+          },
+          "new_name": {
+            "type": "string",
+            "description": "New name for move or copy"
+          },
+          "start_point": {
+            "type": "string",
+            "description": "Starting revision for a new branch"
+          },
+          "all": {
+            "type": "boolean",
+            "description": "Include local and remote-tracking branches"
+          },
+          "remotes": {
+            "type": "boolean",
+            "description": "Operate on remote-tracking branches"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Force the requested operation"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "branch",
+        "{{if eq .action \"delete\"}}--delete{{end}}",
+        "{{if eq .action \"force-delete\"}}--delete{{end}}",
+        "{{if eq .action \"force-delete\"}}--force{{end}}",
+        "{{if eq .action \"move\"}}--move{{end}}",
+        "{{if eq .action \"copy\"}}--copy{{end}}",
+        "{{if eq .action \"show-current\"}}--show-current{{end}}",
+        "{{if .all}}--all{{end}}",
+        "{{if .remotes}}--remotes{{end}}",
+        "{{if .force}}--force{{end}}",
+        "{{with .name}}{{.}}{{end}}",
+        "{{with .new_name}}{{.}}{{end}}",
+        "{{with .start_point}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_checkout",
+      "description": "Switch branches or restore paths",
+      "input": {
+        "type": "object",
+        "properties": {
+          "branch": {
+            "type": "string",
+            "description": "Existing branch or revision to check out"
+          },
+          "new_branch": {
+            "type": "string",
+            "description": "New branch to create"
+          },
+          "start_point": {
+            "type": "string",
+            "description": "Starting revision for the new branch"
+          },
+          "path": {
+            "type": "string",
+            "description": "Path to restore"
+          },
+          "detach": {
+            "type": "boolean",
+            "description": "Detach HEAD at the selected revision"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Discard local changes"
+          },
+          "track": {
+            "type": "boolean",
+            "description": "Configure upstream tracking"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "checkout",
+        "{{if .detach}}--detach{{end}}",
+        "{{if .force}}--force{{end}}",
+        "{{if .track}}--track{{end}}",
+        "{{with .new_branch}}--branch{{end}}",
+        "{{with .new_branch}}{{.}}{{end}}",
+        "{{with .branch}}{{.}}{{end}}",
+        "{{with .start_point}}{{.}}{{end}}",
+        "{{with .path}}--{{end}}",
+        "{{with .path}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_cherry_pick",
+      "description": "Apply changes introduced by a commit",
+      "input": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Cherry-pick operation",
+            "enum": [
+              "apply",
+              "continue",
+              "abort",
+              "quit",
+              "skip"
+            ]
+          },
+          "commit": {
+            "type": "string",
+            "description": "Commit to apply"
+          },
+          "no_commit": {
+            "type": "boolean",
+            "description": "Apply changes without creating a commit"
+          },
+          "edit": {
+            "type": "boolean",
+            "description": "Edit the commit message"
+          },
+          "mainline": {
+            "type": "integer",
+            "description": "Parent number for a merge commit",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "cherry-pick",
+        "{{if eq .action \"continue\"}}--continue{{end}}",
+        "{{if eq .action \"abort\"}}--abort{{end}}",
+        "{{if eq .action \"quit\"}}--quit{{end}}",
+        "{{if eq .action \"skip\"}}--skip{{end}}",
+        "{{if .no_commit}}--no-commit{{end}}",
+        "{{if .edit}}--edit{{end}}",
+        "{{with .mainline}}--mainline={{.}}{{end}}",
+        "{{if eq .action \"apply\"}}{{.commit}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_clean",
+      "description": "Remove untracked files from the working tree",
+      "input": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Pathspec to clean"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Actually remove files; otherwise the command is a dry run"
+          },
+          "directories": {
+            "type": "boolean",
+            "description": "Also remove untracked directories"
+          },
+          "ignored": {
+            "type": "boolean",
+            "description": "Also remove ignored files"
+          },
+          "only_ignored": {
+            "type": "boolean",
+            "description": "Remove only ignored files"
+          },
+          "interactive": {
+            "type": "boolean",
+            "description": "Select files interactively"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "clean",
+        "{{if .force}}--force{{else}}--dry-run{{end}}",
+        "{{if .directories}}-d{{end}}",
+        "{{if .ignored}}-x{{end}}",
+        "{{if .only_ignored}}-X{{end}}",
+        "{{if .interactive}}--interactive{{end}}",
+        "{{with .path}}--{{end}}",
+        "{{with .path}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_clone",
+      "description": "Clone a repository into a new directory",
+      "input": {
+        "type": "object",
+        "properties": {
+          "repository": {
+            "type": "string",
+            "description": "Repository URL or local path",
+            "minLength": 1
+          },
+          "directory": {
+            "type": "string",
+            "description": "Destination directory"
+          },
+          "branch": {
+            "type": "string",
+            "description": "Branch to check out"
+          },
+          "depth": {
+            "type": "integer",
+            "description": "Create a shallow clone with this history depth",
+            "minimum": 1
+          },
+          "single_branch": {
+            "type": "boolean",
+            "description": "Clone only one branch"
+          },
+          "recurse_submodules": {
+            "type": "boolean",
+            "description": "Initialize submodules in the clone"
+          },
+          "bare": {
+            "type": "boolean",
+            "description": "Create a bare repository"
+          },
+          "mirror": {
+            "type": "boolean",
+            "description": "Create a mirror of the source repository"
+          }
+        },
+        "required": [
+          "repository"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "clone",
+        "{{with .branch}}--branch={{.}}{{end}}",
+        "{{with .depth}}--depth={{.}}{{end}}",
+        "{{if .single_branch}}--single-branch{{end}}",
+        "{{if .recurse_submodules}}--recurse-submodules{{end}}",
+        "{{if .bare}}--bare{{end}}",
+        "{{if .mirror}}--mirror{{end}}",
+        "{{.repository}}",
+        "{{with .directory}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_commit",
+      "description": "Record staged changes in the repository",
+      "input": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Commit message"
+          },
+          "all": {
+            "type": "boolean",
+            "description": "Stage modified and deleted tracked files"
+          },
+          "amend": {
+            "type": "boolean",
+            "description": "Replace the tip commit"
+          },
+          "no_edit": {
+            "type": "boolean",
+            "description": "Reuse the existing message when amending"
+          },
+          "signoff": {
+            "type": "boolean",
+            "description": "Add a Signed-off-by trailer"
+          },
+          "no_verify": {
+            "type": "boolean",
+            "description": "Bypass commit hooks"
+          },
+          "allow_empty": {
+            "type": "boolean",
+            "description": "Allow a commit with no tree changes"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "commit",
+        "{{if .all}}--all{{end}}",
+        "{{if .amend}}--amend{{end}}",
+        "{{if .no_edit}}--no-edit{{end}}",
+        "{{if .signoff}}--signoff{{end}}",
+        "{{if .no_verify}}--no-verify{{end}}",
+        "{{if .allow_empty}}--allow-empty{{end}}",
+        "{{with .message}}--message{{end}}",
+        "{{with .message}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_diff",
+      "description": "Show changes between revisions and the working tree",
+      "input": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "description": "First revision"
+          },
+          "to": {
+            "type": "string",
+            "description": "Second revision"
+          },
+          "path": {
+            "type": "string",
+            "description": "Pathspec to compare"
+          },
+          "cached": {
+            "type": "boolean",
+            "description": "Compare the index with a commit"
+          },
+          "stat": {
+            "type": "boolean",
+            "description": "Show a diffstat"
+          },
+          "name_only": {
+            "type": "boolean",
+            "description": "Show only changed file names"
+          },
+          "word_diff": {
+            "type": "boolean",
+            "description": "Show word-level changes"
+          },
+          "no_color": {
+            "type": "boolean",
+            "description": "Disable colored output"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "diff",
+        "{{if .cached}}--cached{{end}}",
+        "{{if .stat}}--stat{{end}}",
+        "{{if .name_only}}--name-only{{end}}",
+        "{{if .word_diff}}--word-diff{{end}}",
+        "{{if .no_color}}--no-color{{end}}",
+        "{{with .from}}{{.}}{{end}}",
+        "{{with .to}}{{.}}{{end}}",
+        "{{with .path}}--{{end}}",
+        "{{with .path}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_fetch",
+      "description": "Download objects and refs from remotes",
+      "input": {
+        "type": "object",
+        "properties": {
+          "remote": {
+            "type": "string",
+            "description": "Remote name or URL"
+          },
+          "refspec": {
+            "type": "string",
+            "description": "Refspec to fetch"
+          },
+          "all": {
+            "type": "boolean",
+            "description": "Fetch all remotes"
+          },
+          "prune": {
+            "type": "boolean",
+            "description": "Remove deleted remote-tracking refs"
+          },
+          "tags": {
+            "type": "boolean",
+            "description": "Fetch all tags"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Allow non-fast-forward updates"
+          },
+          "depth": {
+            "type": "integer",
+            "description": "Limit history depth",
+            "minimum": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "fetch",
+        "{{if .all}}--all{{end}}",
+        "{{if .prune}}--prune{{end}}",
+        "{{if .tags}}--tags{{end}}",
+        "{{if .force}}--force{{end}}",
+        "{{with .depth}}--depth={{.}}{{end}}",
+        "{{with .remote}}{{.}}{{end}}",
+        "{{with .refspec}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_grep",
+      "description": "Search tracked content for a pattern",
+      "input": {
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "description": "Pattern to search for",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "string",
+            "description": "Tree or commit to search"
+          },
+          "path": {
+            "type": "string",
+            "description": "Pathspec to search"
+          },
+          "ignore_case": {
+            "type": "boolean",
+            "description": "Ignore case"
+          },
+          "line_number": {
+            "type": "boolean",
+            "description": "Show line numbers"
+          },
+          "word_regexp": {
+            "type": "boolean",
+            "description": "Match whole words"
+          },
+          "files_with_matches": {
+            "type": "boolean",
+            "description": "Show only matching file names"
+          }
+        },
+        "required": [
+          "pattern"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "grep",
+        "{{if .ignore_case}}--ignore-case{{end}}",
+        "{{if .line_number}}--line-number{{end}}",
+        "{{if .word_regexp}}--word-regexp{{end}}",
+        "{{if .files_with_matches}}--files-with-matches{{end}}",
+        "--",
+        "{{.pattern}}",
+        "{{with .revision}}{{.}}{{end}}",
+        "{{with .path}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_init",
+      "description": "Create or reinitialize a Git repository",
+      "input": {
+        "type": "object",
+        "properties": {
+          "directory": {
+            "type": "string",
+            "description": "Directory to initialize"
+          },
+          "bare": {
+            "type": "boolean",
+            "description": "Create a bare repository"
+          },
+          "initial_branch": {
+            "type": "string",
+            "description": "Initial branch name"
+          },
+          "object_format": {
+            "type": "string",
+            "description": "Object hash algorithm",
+            "enum": [
+              "sha1",
+              "sha256"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "init",
+        "{{if .bare}}--bare{{end}}",
+        "{{with .initial_branch}}--initial-branch={{.}}{{end}}",
+        "{{with .object_format}}--object-format={{.}}{{end}}",
+        "{{with .directory}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_log",
+      "description": "Show commit history",
+      "input": {
+        "type": "object",
+        "properties": {
+          "revision": {
+            "type": "string",
+            "description": "Revision or range"
+          },
+          "path": {
+            "type": "string",
+            "description": "Pathspec limiting history"
+          },
+          "max_count": {
+            "type": "integer",
+            "description": "Maximum number of commits",
+            "minimum": 1
+          },
+          "since": {
+            "type": "string",
+            "description": "Show commits newer than this date"
+          },
+          "until": {
+            "type": "string",
+            "description": "Show commits older than this date"
+          },
+          "author": {
+            "type": "string",
+            "description": "Author pattern"
+          },
+          "grep": {
+            "type": "string",
+            "description": "Commit-message pattern"
+          },
+          "oneline": {
+            "type": "boolean",
+            "description": "Use one line per commit"
+          },
+          "graph": {
+            "type": "boolean",
+            "description": "Draw the commit graph"
+          },
+          "all": {
+            "type": "boolean",
+            "description": "Show refs from all namespaces"
+          },
+          "decorate": {
+            "type": "boolean",
+            "description": "Show ref names"
+          },
+          "stat": {
+            "type": "boolean",
+            "description": "Show a diffstat"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "log",
+        "{{with .max_count}}--max-count={{.}}{{end}}",
+        "{{with .since}}--since={{.}}{{end}}",
+        "{{with .until}}--until={{.}}{{end}}",
+        "{{with .author}}--author={{.}}{{end}}",
+        "{{with .grep}}--grep={{.}}{{end}}",
+        "{{if .oneline}}--oneline{{end}}",
+        "{{if .graph}}--graph{{end}}",
+        "{{if .all}}--all{{end}}",
+        "{{if .decorate}}--decorate{{end}}",
+        "{{if .stat}}--stat{{end}}",
+        "{{with .revision}}{{.}}{{end}}",
+        "{{with .path}}--{{end}}",
+        "{{with .path}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_merge",
+      "description": "Join development histories",
+      "input": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Merge operation",
+            "enum": [
+              "merge",
+              "continue",
+              "abort",
+              "quit"
+            ]
+          },
+          "commit": {
+            "type": "string",
+            "description": "Commit or branch to merge"
+          },
+          "message": {
+            "type": "string",
+            "description": "Merge commit message"
+          },
+          "no_ff": {
+            "type": "boolean",
+            "description": "Create a merge commit even when fast-forwarding is possible"
+          },
+          "ff_only": {
+            "type": "boolean",
+            "description": "Refuse non-fast-forward merges"
+          },
+          "squash": {
+            "type": "boolean",
+            "description": "Produce working tree changes without a merge commit"
+          },
+          "no_commit": {
+            "type": "boolean",
+            "description": "Stop before creating the merge commit"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "merge",
+        "{{if eq .action \"continue\"}}--continue{{end}}",
+        "{{if eq .action \"abort\"}}--abort{{end}}",
+        "{{if eq .action \"quit\"}}--quit{{end}}",
+        "{{if .no_ff}}--no-ff{{end}}",
+        "{{if .ff_only}}--ff-only{{end}}",
+        "{{if .squash}}--squash{{end}}",
+        "{{if .no_commit}}--no-commit{{end}}",
+        "{{with .message}}--message{{end}}",
+        "{{with .message}}{{.}}{{end}}",
+        "{{if eq .action \"merge\"}}{{.commit}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_mv",
+      "description": "Move or rename a file or directory",
+      "input": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "Existing path",
+            "minLength": 1
+          },
+          "destination": {
+            "type": "string",
+            "description": "Destination path",
+            "minLength": 1
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Overwrite an existing destination"
+          },
+          "dry_run": {
+            "type": "boolean",
+            "description": "Show what would be done"
+          }
+        },
+        "required": [
+          "source",
+          "destination"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "mv",
+        "{{if .force}}--force{{end}}",
+        "{{if .dry_run}}--dry-run{{end}}",
+        "{{.source}}",
+        "{{.destination}}"
+      ]
+    },
+    {
+      "name": "git_pull",
+      "description": "Fetch and integrate changes",
+      "input": {
+        "type": "object",
+        "properties": {
+          "repository": {
+            "type": "string",
+            "description": "Remote name or URL"
+          },
+          "refspec": {
+            "type": "string",
+            "description": "Branch or refspec to pull"
+          },
+          "rebase": {
+            "type": "boolean",
+            "description": "Rebase after fetching"
+          },
+          "no_rebase": {
+            "type": "boolean",
+            "description": "Merge after fetching"
+          },
+          "ff_only": {
+            "type": "boolean",
+            "description": "Allow only fast-forward updates"
+          },
+          "prune": {
+            "type": "boolean",
+            "description": "Prune deleted remote-tracking refs"
+          },
+          "tags": {
+            "type": "boolean",
+            "description": "Fetch all tags"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "pull",
+        "{{if .rebase}}--rebase{{end}}",
+        "{{if .no_rebase}}--no-rebase{{end}}",
+        "{{if .ff_only}}--ff-only{{end}}",
+        "{{if .prune}}--prune{{end}}",
+        "{{if .tags}}--tags{{end}}",
+        "{{with .repository}}{{.}}{{end}}",
+        "{{with .refspec}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_push",
+      "description": "Update remote refs",
+      "input": {
+        "type": "object",
+        "properties": {
+          "remote": {
+            "type": "string",
+            "description": "Remote name or URL"
+          },
+          "refspec": {
+            "type": "string",
+            "description": "Refspec to push"
+          },
+          "set_upstream": {
+            "type": "boolean",
+            "description": "Set upstream tracking"
+          },
+          "force_with_lease": {
+            "type": "boolean",
+            "description": "Force only if the remote ref has the expected value"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Force the update"
+          },
+          "tags": {
+            "type": "boolean",
+            "description": "Push all tags"
+          },
+          "delete": {
+            "type": "boolean",
+            "description": "Delete the remote ref"
+          },
+          "dry_run": {
+            "type": "boolean",
+            "description": "Show what would be pushed"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "push",
+        "{{if .set_upstream}}--set-upstream{{end}}",
+        "{{if .force_with_lease}}--force-with-lease{{end}}",
+        "{{if .force}}--force{{end}}",
+        "{{if .tags}}--tags{{end}}",
+        "{{if .delete}}--delete{{end}}",
+        "{{if .dry_run}}--dry-run{{end}}",
+        "{{with .remote}}{{.}}{{end}}",
+        "{{with .refspec}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_rebase",
+      "description": "Reapply commits onto another base",
+      "input": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Rebase operation",
+            "enum": [
+              "start",
+              "continue",
+              "abort",
+              "quit",
+              "skip",
+              "edit-todo",
+              "show-current-patch"
+            ]
+          },
+          "upstream": {
+            "type": "string",
+            "description": "Upstream revision"
+          },
+          "branch": {
+            "type": "string",
+            "description": "Branch to rebase"
+          },
+          "onto": {
+            "type": "string",
+            "description": "New base"
+          },
+          "interactive": {
+            "type": "boolean",
+            "description": "Edit the rebase plan"
+          },
+          "autosquash": {
+            "type": "boolean",
+            "description": "Reorder fixup and squash commits"
+          },
+          "rebase_merges": {
+            "type": "boolean",
+            "description": "Preserve merge commits"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "rebase",
+        "{{if eq .action \"continue\"}}--continue{{end}}",
+        "{{if eq .action \"abort\"}}--abort{{end}}",
+        "{{if eq .action \"quit\"}}--quit{{end}}",
+        "{{if eq .action \"skip\"}}--skip{{end}}",
+        "{{if eq .action \"edit-todo\"}}--edit-todo{{end}}",
+        "{{if eq .action \"show-current-patch\"}}--show-current-patch{{end}}",
+        "{{with .onto}}--onto={{.}}{{end}}",
+        "{{if .interactive}}--interactive{{end}}",
+        "{{if .autosquash}}--autosquash{{end}}",
+        "{{if .rebase_merges}}--rebase-merges{{end}}",
+        "{{if eq .action \"start\"}}{{.upstream}}{{end}}",
+        "{{if eq .action \"start\"}}{{.branch}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_reset",
+      "description": "Reset HEAD, the index, or paths",
+      "input": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "description": "Reset mode",
+            "enum": [
+              "soft",
+              "mixed",
+              "hard",
+              "merge",
+              "keep"
+            ]
+          },
+          "target": {
+            "type": "string",
+            "description": "Commit to reset to"
+          },
+          "path": {
+            "type": "string",
+            "description": "Pathspec to reset"
+          },
+          "recurse_submodules": {
+            "type": "boolean",
+            "description": "Recursively reset active submodules"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "reset",
+        "{{with .mode}}--{{.}}{{end}}",
+        "{{if .recurse_submodules}}--recurse-submodules{{end}}",
+        "{{with .target}}{{.}}{{end}}",
+        "{{with .path}}--{{end}}",
+        "{{with .path}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_restore",
+      "description": "Restore working tree or index files",
+      "input": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Pathspec to restore",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "description": "Tree used as the restore source"
+          },
+          "staged": {
+            "type": "boolean",
+            "description": "Restore the index"
+          },
+          "worktree": {
+            "type": "boolean",
+            "description": "Restore the working tree"
+          },
+          "ours": {
+            "type": "boolean",
+            "description": "Use the ours version for unmerged paths"
+          },
+          "theirs": {
+            "type": "boolean",
+            "description": "Use the theirs version for unmerged paths"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "restore",
+        "{{with .source}}--source={{.}}{{end}}",
+        "{{if .staged}}--staged{{end}}",
+        "{{if .worktree}}--worktree{{end}}",
+        "{{if .ours}}--ours{{end}}",
+        "{{if .theirs}}--theirs{{end}}",
+        "--",
+        "{{.path}}"
+      ]
+    },
+    {
+      "name": "git_revert",
+      "description": "Create a commit that reverses an existing commit",
+      "input": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Revert operation",
+            "enum": [
+              "revert",
+              "continue",
+              "abort",
+              "quit"
+            ]
+          },
+          "commit": {
+            "type": "string",
+            "description": "Commit to revert"
+          },
+          "no_commit": {
+            "type": "boolean",
+            "description": "Apply changes without committing"
+          },
+          "edit": {
+            "type": "boolean",
+            "description": "Edit the commit message"
+          },
+          "mainline": {
+            "type": "integer",
+            "description": "Parent number for a merge commit",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "revert",
+        "{{if eq .action \"continue\"}}--continue{{end}}",
+        "{{if eq .action \"abort\"}}--abort{{end}}",
+        "{{if eq .action \"quit\"}}--quit{{end}}",
+        "{{if .no_commit}}--no-commit{{end}}",
+        "{{if .edit}}--edit{{end}}",
+        "{{with .mainline}}--mainline={{.}}{{end}}",
+        "{{if eq .action \"revert\"}}{{.commit}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_rm",
+      "description": "Remove files from the index and working tree",
+      "input": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Pathspec to remove",
+            "minLength": 1
+          },
+          "cached": {
+            "type": "boolean",
+            "description": "Remove only from the index"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Override safety checks"
+          },
+          "dry_run": {
+            "type": "boolean",
+            "description": "Show what would be removed"
+          },
+          "recursive": {
+            "type": "boolean",
+            "description": "Allow recursive directory removal"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "rm",
+        "{{if .cached}}--cached{{end}}",
+        "{{if .force}}--force{{end}}",
+        "{{if .dry_run}}--dry-run{{end}}",
+        "{{if .recursive}}-r{{end}}",
+        "--",
+        "{{.path}}"
+      ]
+    },
+    {
+      "name": "git_show",
+      "description": "Show a Git object",
+      "input": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "description": "Object to display"
+          },
+          "stat": {
+            "type": "boolean",
+            "description": "Show a diffstat"
+          },
+          "name_only": {
+            "type": "boolean",
+            "description": "Show only changed file names"
+          },
+          "format": {
+            "type": "string",
+            "description": "Commit output format"
+          },
+          "no_patch": {
+            "type": "boolean",
+            "description": "Suppress patch output"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "show",
+        "{{if .stat}}--stat{{end}}",
+        "{{if .name_only}}--name-only{{end}}",
+        "{{with .format}}--format={{.}}{{end}}",
+        "{{if .no_patch}}--no-patch{{end}}",
+        "{{with .object}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_stash",
+      "description": "Manage stashed working tree changes",
+      "input": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Stash operation",
+            "enum": [
+              "push",
+              "list",
+              "show",
+              "pop",
+              "apply",
+              "branch",
+              "drop",
+              "clear",
+              "create"
+            ]
+          },
+          "stash": {
+            "type": "string",
+            "description": "Stash reference"
+          },
+          "message": {
+            "type": "string",
+            "description": "Description for a new stash"
+          },
+          "path": {
+            "type": "string",
+            "description": "Pathspec to stash"
+          },
+          "keep_index": {
+            "type": "boolean",
+            "description": "Keep staged changes in the index"
+          },
+          "staged": {
+            "type": "boolean",
+            "description": "Stash only staged changes"
+          },
+          "include_untracked": {
+            "type": "boolean",
+            "description": "Include untracked files"
+          },
+          "all": {
+            "type": "boolean",
+            "description": "Include ignored files"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "stash",
+        "{{.action}}",
+        "{{if .keep_index}}--keep-index{{end}}",
+        "{{if .staged}}--staged{{end}}",
+        "{{if .include_untracked}}--include-untracked{{end}}",
+        "{{if .all}}--all{{end}}",
+        "{{with .message}}--message{{end}}",
+        "{{with .message}}{{.}}{{end}}",
+        "{{with .stash}}{{.}}{{end}}",
+        "{{with .path}}--{{end}}",
+        "{{with .path}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_status",
+      "description": "Show working tree status",
+      "input": {
+        "type": "object",
+        "properties": {
+          "short": {
+            "type": "boolean",
+            "description": "Use the short format"
+          },
+          "branch": {
+            "type": "boolean",
+            "description": "Show branch and tracking information"
+          },
+          "porcelain": {
+            "type": "string",
+            "description": "Stable machine-readable format",
+            "enum": [
+              "v1",
+              "v2"
+            ]
+          },
+          "show_stash": {
+            "type": "boolean",
+            "description": "Show the number of stashed entries"
+          },
+          "untracked_files": {
+            "type": "string",
+            "description": "Untracked file display mode",
+            "enum": [
+              "no",
+              "normal",
+              "all"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "status",
+        "{{if .short}}--short{{end}}",
+        "{{if .branch}}--branch{{end}}",
+        "{{with .porcelain}}--porcelain={{.}}{{end}}",
+        "{{if .show_stash}}--show-stash{{end}}",
+        "{{with .untracked_files}}--untracked-files={{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_submodule",
+      "description": "Initialize, update, or inspect submodules",
+      "input": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Submodule operation",
+            "enum": [
+              "add",
+              "status",
+              "init",
+              "deinit",
+              "update",
+              "set-branch",
+              "set-url",
+              "summary",
+              "sync",
+              "absorbgitdirs"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "description": "Submodule path"
+          },
+          "repository": {
+            "type": "string",
+            "description": "Repository URL used by add or set-url"
+          },
+          "branch": {
+            "type": "string",
+            "description": "Branch tracked by the submodule"
+          },
+          "recursive": {
+            "type": "boolean",
+            "description": "Recurse into nested submodules"
+          },
+          "remote": {
+            "type": "boolean",
+            "description": "Use the remote-tracking branch"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Force the operation"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "submodule",
+        "{{.action}}",
+        "{{if .recursive}}--recursive{{end}}",
+        "{{if .remote}}--remote{{end}}",
+        "{{if .force}}--force{{end}}",
+        "{{with .branch}}--branch={{.}}{{end}}",
+        "{{with .repository}}{{.}}{{end}}",
+        "{{with .path}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_switch",
+      "description": "Switch branches",
+      "input": {
+        "type": "object",
+        "properties": {
+          "branch": {
+            "type": "string",
+            "description": "Existing branch to switch to"
+          },
+          "new_branch": {
+            "type": "string",
+            "description": "New branch to create"
+          },
+          "start_point": {
+            "type": "string",
+            "description": "Starting revision for the new branch"
+          },
+          "detach": {
+            "type": "boolean",
+            "description": "Detach HEAD"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Discard local changes"
+          },
+          "track": {
+            "type": "boolean",
+            "description": "Configure upstream tracking"
+          },
+          "orphan": {
+            "type": "boolean",
+            "description": "Create an orphan branch"
+          }
+        },
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "switch",
+        "{{if .detach}}--detach{{end}}",
+        "{{if .force}}--force{{end}}",
+        "{{if .track}}--track{{end}}",
+        "{{if .orphan}}--orphan{{end}}",
+        "{{with .new_branch}}--create{{end}}",
+        "{{with .new_branch}}{{.}}{{end}}",
+        "{{with .branch}}{{.}}{{end}}",
+        "{{with .start_point}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_tag",
+      "description": "List, create, delete, or verify tags",
+      "input": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Tag operation",
+            "enum": [
+              "list",
+              "create",
+              "delete",
+              "verify"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "Tag name"
+          },
+          "target": {
+            "type": "string",
+            "description": "Object to tag"
+          },
+          "pattern": {
+            "type": "string",
+            "description": "Pattern used when listing tags"
+          },
+          "message": {
+            "type": "string",
+            "description": "Annotated tag message"
+          },
+          "annotate": {
+            "type": "boolean",
+            "description": "Create an annotated tag"
+          },
+          "sign": {
+            "type": "boolean",
+            "description": "Create a signed tag"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Replace an existing tag"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "tag",
+        "{{if eq .action \"list\"}}--list{{end}}",
+        "{{if eq .action \"delete\"}}--delete{{end}}",
+        "{{if eq .action \"verify\"}}--verify{{end}}",
+        "{{if .annotate}}--annotate{{end}}",
+        "{{if .sign}}--sign{{end}}",
+        "{{if .force}}--force{{end}}",
+        "{{with .message}}--message{{end}}",
+        "{{with .message}}{{.}}{{end}}",
+        "{{with .name}}{{.}}{{end}}",
+        "{{with .target}}{{.}}{{end}}",
+        "{{with .pattern}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_worktree",
+      "description": "Manage linked working trees",
+      "input": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Worktree operation",
+            "enum": [
+              "add",
+              "list",
+              "lock",
+              "move",
+              "prune",
+              "remove",
+              "repair",
+              "unlock"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "description": "Worktree path"
+          },
+          "destination": {
+            "type": "string",
+            "description": "Destination path for move"
+          },
+          "commit": {
+            "type": "string",
+            "description": "Commit or branch checked out by add"
+          },
+          "new_branch": {
+            "type": "string",
+            "description": "New branch created by add"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Force the operation"
+          },
+          "detach": {
+            "type": "boolean",
+            "description": "Create a detached worktree"
+          },
+          "porcelain": {
+            "type": "boolean",
+            "description": "Use stable machine-readable output"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "worktree",
+        "{{.action}}",
+        "{{if .force}}--force{{end}}",
+        "{{if .detach}}--detach{{end}}",
+        "{{if .porcelain}}--porcelain{{end}}",
+        "{{with .new_branch}}--branch={{.}}{{end}}",
+        "{{with .path}}{{.}}{{end}}",
+        "{{with .destination}}{{.}}{{end}}",
+        "{{with .commit}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_remote",
+      "description": "Manage tracked remote repositories",
+      "input": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Remote operation",
+            "enum": [
+              "list",
+              "add",
+              "remove",
+              "rename",
+              "get-url",
+              "set-url",
+              "show",
+              "prune",
+              "update"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "Remote name"
+          },
+          "new_name": {
+            "type": "string",
+            "description": "New remote name"
+          },
+          "url": {
+            "type": "string",
+            "description": "Remote URL"
+          },
+          "fetch": {
+            "type": "boolean",
+            "description": "Fetch immediately after adding"
+          },
+          "push": {
+            "type": "boolean",
+            "description": "Operate on push URLs"
+          },
+          "all": {
+            "type": "boolean",
+            "description": "Operate on all matching URLs"
+          },
+          "verbose": {
+            "type": "boolean",
+            "description": "Show remote URLs"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "remote",
+        "{{if .verbose}}--verbose{{end}}",
+        "{{if ne .action \"list\"}}{{.action}}{{end}}",
+        "{{if .fetch}}--fetch{{end}}",
+        "{{if .push}}--push{{end}}",
+        "{{if .all}}--all{{end}}",
+        "{{with .name}}{{.}}{{end}}",
+        "{{with .new_name}}{{.}}{{end}}",
+        "{{with .url}}{{.}}{{end}}"
+      ]
+    },
+    {
+      "name": "git_blame",
+      "description": "Show who last changed each line of a file",
+      "input": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File to annotate",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "string",
+            "description": "Revision containing the file"
+          },
+          "line_range": {
+            "type": "string",
+            "description": "Line range in start,end form"
+          },
+          "porcelain": {
+            "type": "boolean",
+            "description": "Use porcelain output"
+          },
+          "ignore_whitespace": {
+            "type": "boolean",
+            "description": "Ignore whitespace changes"
+          },
+          "show_email": {
+            "type": "boolean",
+            "description": "Show author email addresses"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "additionalProperties": false
+      },
+      "command": [
+        "git",
+        "blame",
+        "{{if .porcelain}}--porcelain{{end}}",
+        "{{if .ignore_whitespace}}--ignore-space-change{{end}}",
+        "{{if .show_email}}--show-email{{end}}",
+        "{{with .line_range}}--lines={{.}}{{end}}",
+        "{{with .revision}}{{.}}{{end}}",
+        "--",
+        "{{.path}}"
+      ]
+    }
+  ]
+}

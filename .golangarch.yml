@@ -1,0 +1,285 @@
+version: 2
+
+rules:
+  - scope:
+      path: cmd/server
+    layout:
+      directories:
+        flat: true
+        subdirs: false
+      filenames: [main.go]
+      binding: {}
+    declarations:
+      types: []
+      vars: []
+      consts: []
+      funcs:
+        exported: []
+        unexported: [main]
+    imports:
+      - $module/internal/config
+      - $module/internal/controller
+      - $module/internal/services/execute
+      - $module/internal/services/render
+    signatures:
+      unexported:
+        receiver: false
+        inputs: []
+        outputs: []
+
+  - scope:
+      path: configs
+    layout:
+      directories:
+        flat: true
+        subdirs: false
+      filenames: [package.go]
+      binding: {}
+    declarations:
+      types: []
+      vars:
+        exported: []
+        unexported: [files]
+      consts: []
+      funcs:
+        exported: [Read]
+        unexported: []
+    imports: []
+    signatures:
+      exported:
+        receiver: false
+        inputs: []
+        outputs: []
+
+  - scope:
+      path: internal/models
+    layout:
+      directories:
+        flat: true
+        subdirs: false
+      filenames: [command.go, result.go]
+      binding:
+        name: true
+        receiver: false
+    declarations:
+      types:
+        exported: [Command, Result]
+        unexported: []
+      vars: []
+      consts: []
+      funcs: []
+    imports: []
+
+  - scope:
+      path: internal/config
+    layout:
+      directories:
+        flat: true
+        subdirs: false
+      filenames: [package.go, model.go]
+      binding: {}
+
+  - scope:
+      path: internal/config/package.go
+    layout:
+      binding: {}
+    declarations:
+      types: []
+      vars:
+        exported: []
+        unexported: [configSchema]
+      consts: []
+      funcs:
+        exported: [Load]
+        unexported: []
+    imports:
+      - github.com/santhosh-tekuri/jsonschema/v6
+      - $module/configs
+    signatures:
+      exported:
+        receiver: false
+        inputs: []
+        outputs:
+          - $module/internal/config.Config
+
+  - scope:
+      path: internal/config/model.go
+    layout:
+      binding: {}
+    declarations:
+      types:
+        exported: [Config, ConfigTool]
+        unexported: []
+      vars: []
+      consts: []
+      funcs: []
+    imports: []
+
+  - scope:
+      path: internal/services
+    layout:
+      directories:
+        flat: false
+        subdirs: true
+
+  - scope:
+      path: internal/services/render
+    layout:
+      directories:
+        flat: true
+        subdirs: false
+      filenames: [package.go, render.go]
+      binding: {}
+
+  - scope:
+      path: internal/services/render/package.go
+    layout:
+      binding: {}
+    declarations:
+      types:
+        exported: [Service]
+        unexported: []
+      vars:
+        exported: [ErrEmptyCommand, ErrInvalidTimeout, ErrUnknownTool]
+        unexported: []
+      consts: []
+      funcs:
+        exported: [New]
+        unexported: []
+    imports:
+      - $module/internal/config
+    signatures:
+      exported:
+        receiver: false
+        inputs:
+          - $module/internal/config.Config
+        outputs:
+          - $module/internal/services/render.Service
+
+  - scope:
+      path: internal/services/render/render.go
+    layout:
+      binding: {}
+    declarations:
+      types: []
+      vars: []
+      consts: []
+      funcs:
+        exported: [Render]
+        unexported: []
+    imports:
+      - $module/internal/models
+    signatures:
+      exported:
+        receiver: true
+        inputs: []
+        outputs:
+          - $module/internal/models.Command
+
+  - scope:
+      path: internal/services/execute
+    layout:
+      directories:
+        flat: true
+        subdirs: false
+      filenames: [package.go, execute.go]
+      binding: {}
+
+  - scope:
+      path: internal/services/execute/package.go
+    layout:
+      binding: {}
+    declarations:
+      types:
+        exported: [Service]
+        unexported: []
+      vars: []
+      consts: []
+      funcs:
+        exported: [New]
+        unexported: []
+    imports: []
+    signatures:
+      exported:
+        receiver: false
+        inputs: []
+        outputs:
+          - $module/internal/services/execute.Service
+
+  - scope:
+      path: internal/services/execute/execute.go
+    layout:
+      binding: {}
+    declarations:
+      types: []
+      vars: []
+      consts: []
+      funcs:
+        exported: [Execute]
+        unexported: []
+    imports:
+      - $module/internal/models
+    signatures:
+      exported:
+        receiver: true
+        inputs:
+          - $module/internal/models.Command
+        outputs:
+          - $module/internal/models.Result
+
+  - scope:
+      path: internal/controller
+    layout:
+      directories:
+        flat: true
+        subdirs: false
+      filenames: [package.go, serve.go]
+      binding: {}
+
+  - scope:
+      path: internal/controller/package.go
+    layout:
+      binding: {}
+    declarations:
+      types:
+        exported: [Controller]
+        unexported: []
+      vars: []
+      consts: []
+      funcs:
+        exported: [New]
+        unexported: []
+    imports:
+      - $module/internal/config
+      - $module/internal/services/execute
+      - $module/internal/services/render
+    signatures:
+      exported:
+        receiver: false
+        inputs:
+          - $module/internal/config.Config
+          - $module/internal/services/execute.Service
+          - $module/internal/services/render.Service
+        outputs:
+          - $module/internal/controller.Controller
+
+  - scope:
+      path: internal/controller/serve.go
+    layout:
+      binding: {}
+    declarations:
+      types: []
+      vars: []
+      consts: []
+      funcs:
+        exported: [Serve]
+        unexported: []
+    imports:
+      - $module/internal/services/execute
+      - $module/internal/services/render
+      - github.com/modelcontextprotocol/go-sdk/mcp
+    signatures:
+      exported:
+        receiver: true
+        inputs: []
+        outputs: []
